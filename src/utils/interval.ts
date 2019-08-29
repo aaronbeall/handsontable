@@ -1,15 +1,22 @@
-import { requestAnimationFrame, cancelAnimationFrame } from './../helpers/feature';
+import { requestAnimationFrame, cancelAnimationFrame } from '../helpers/feature';
 
 /**
  * @class Interval
  * @util
  */
 class Interval {
-  static create(func, delay) {
+  timer: null;
+  func: Function;
+  delay: number;
+  stopped: boolean;
+  _then: number | null;
+  _callback: () => void;
+
+  static create(func: any, delay: number) {
     return new Interval(func, delay);
   }
 
-  constructor(func, delay) {
+  constructor(func: Function, delay: number) {
     /**
      * Animation frame request id.
      *
@@ -89,7 +96,7 @@ class Interval {
 
     if (this.delay) {
       const now = Date.now();
-      const elapsed = now - this._then;
+      const elapsed = now - this._then!;
 
       if (elapsed > this.delay) {
         this._then = now - (elapsed % this.delay);
@@ -109,11 +116,11 @@ export default Interval;
  * @param {Number|String} delay
  * @returns {Number}
  */
-export function parseDelay(delay) {
+export function parseDelay(delay: any) {
   let result = delay;
 
   if (typeof result === 'string' && /fps$/.test(result)) {
-    result = 1000 / parseInt(result.replace('fps', '') || 0, 10);
+    result = 1000 / parseInt(result.replace('fps', '') || '0', 10);
   }
 
   return result;

@@ -6,7 +6,9 @@ import { isObject } from './../helpers/object';
  * @util
  */
 export class RecordTranslator {
-  constructor(hot) {
+  hot: any;
+
+  constructor(hot: any) {
     this.hot = hot;
   }
 
@@ -16,7 +18,7 @@ export class RecordTranslator {
    * @param {Number} row Physical row index.
    * @returns {Number} Returns visual row index.
    */
-  toVisualRow(row) {
+  toVisualRow(row: number): number {
     return this.hot.runHooks('unmodifyRow', row);
   }
 
@@ -26,7 +28,7 @@ export class RecordTranslator {
    * @param {Number} column Physical column index.
    * @returns {Number} Returns visual column index.
    */
-  toVisualColumn(column) {
+  toVisualColumn(column: number): number {
     return this.hot.runHooks('unmodifyCol', column);
   }
 
@@ -38,7 +40,9 @@ export class RecordTranslator {
    * @param {Number} [column] Physical column index.
    * @returns {Object|Array} Returns an object with visual records or an array if coordinates passed as separate arguments.
    */
-  toVisual(row, column) {
+  toVisual(row: number, column: number): [number, number];
+  toVisual(coords: { row: number; column: number }): { row: number; column: number };
+  toVisual(row: number | { row: number; column: number }, column?: number): [number, number] | { row: number; column: number } {
     let result;
 
     if (isObject(row)) {
@@ -47,7 +51,7 @@ export class RecordTranslator {
         column: this.toVisualColumn(row.column),
       };
     } else {
-      result = [this.toVisualRow(row), this.toVisualColumn(column)];
+      result = [this.toVisualRow(row), this.toVisualColumn(column!)] as [number, number];
     }
 
     return result;
@@ -59,7 +63,7 @@ export class RecordTranslator {
    * @param {Number} row Visual row index.
    * @returns {Number} Returns physical row index.
    */
-  toPhysicalRow(row) {
+  toPhysicalRow(row: number): number {
     return this.hot.runHooks('modifyRow', row);
   }
 
@@ -69,7 +73,7 @@ export class RecordTranslator {
    * @param {Number} column Visual column index.
    * @returns {Number} Returns physical column index.
    */
-  toPhysicalColumn(column) {
+  toPhysicalColumn(column: number): number {
     return this.hot.runHooks('modifyCol', column);
   }
 
@@ -81,7 +85,9 @@ export class RecordTranslator {
    * @param {Number} [column] Visual column index.
    * @returns {Object|Array} Returns an object with physical records or an array if coordinates passed as separate arguments.
    */
-  toPhysical(row, column) {
+  toPhysical(row: number, column: number): [number, number];
+  toPhysical(coords: { row: number; column: number }): { row: number; column: number };
+  toPhysical(row: number | { row: number; column: number }, column?: number): [number, number] | { row: number; column: number } {
     let result;
 
     if (isObject(row)) {
@@ -90,7 +96,7 @@ export class RecordTranslator {
         column: this.toPhysicalColumn(row.column),
       };
     } else {
-      result = [this.toPhysicalRow(row), this.toPhysicalColumn(column)];
+      result = [this.toPhysicalRow(row), this.toPhysicalColumn(column!)] as [number, number];
     }
 
     return result;
@@ -106,7 +112,7 @@ const translatorSingletons = new WeakMap();
  * @param {*} identity
  * @param {*} hot
  */
-export function registerIdentity(identity, hot) {
+export function registerIdentity(identity: any, hot: any) {
   identities.set(identity, hot);
 }
 
@@ -116,7 +122,7 @@ export function registerIdentity(identity, hot) {
  * @param {*} identity
  * @returns {RecordTranslator}
  */
-export function getTranslator(identity) {
+export function getTranslator(identity: any) {
   const instance = identity instanceof Core ? identity : getIdentity(identity);
   let singleton;
 
@@ -137,7 +143,7 @@ export function getTranslator(identity) {
  * @param {*} identity
  * @returns {*}
  */
-export function getIdentity(identity) {
+export function getIdentity(identity: any) {
   if (!identities.has(identity)) {
     throw Error('Record translator was not registered for this object identity');
   }

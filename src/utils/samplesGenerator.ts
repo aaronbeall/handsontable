@@ -7,6 +7,11 @@ import { stringify } from './../helpers/mixed';
  * @util
  */
 class SamplesGenerator {
+  samples: Map<any, any> | null;
+  dataFactory: Function;
+  customSampleCount: number | null;
+  allowDuplicates: boolean;
+
   /**
    * Number of samples to take of each value length.
    *
@@ -16,7 +21,7 @@ class SamplesGenerator {
     return 3;
   }
 
-  constructor(dataFactory) {
+  constructor(dataFactory: Function) {
     /**
      * Samples prepared for calculations.
      *
@@ -63,7 +68,7 @@ class SamplesGenerator {
    *
    * @param {Number} sampleCount Number of samples to be collected.
    */
-  setSampleCount(sampleCount) {
+  setSampleCount(sampleCount: number) {
     this.customSampleCount = sampleCount;
   }
 
@@ -72,7 +77,7 @@ class SamplesGenerator {
    *
    * @param {Boolean} allowDuplicates `true` to allow duplicate values.
    */
-  setAllowDuplicates(allowDuplicates) {
+  setAllowDuplicates(allowDuplicates: boolean) {
     this.allowDuplicates = allowDuplicates;
   }
 
@@ -83,7 +88,7 @@ class SamplesGenerator {
    * @param {Object} colRange
    * @returns {Object}
    */
-  generateRowSamples(rowRange, colRange) {
+  generateRowSamples(rowRange: { from: number; to: number; }, colRange: { from: number; to: number; }) {
     return this.generateSamples('row', colRange, rowRange);
   }
 
@@ -94,7 +99,7 @@ class SamplesGenerator {
    * @param {Object} rowRange Column index.
    * @returns {Object}
    */
-  generateColumnSamples(colRange, rowRange) {
+  generateColumnSamples(colRange: { from: number; to: number; }, rowRange: { from: number; to: number; }) {
     return this.generateSamples('col', rowRange, colRange);
   }
 
@@ -106,11 +111,11 @@ class SamplesGenerator {
    * @param {Object|Number} specifierRange
    * @returns {Map}
    */
-  generateSamples(type, range, specifierRange) {
+  generateSamples(type: string, range: any, specifierRange: { from: number; to: number; }) {
     const samples = new Map();
     const { from, to } = typeof specifierRange === 'number' ? { from: specifierRange, to: specifierRange } : specifierRange;
 
-    rangeEach(from, to, (index) => {
+    rangeEach(from, to, (index: any) => {
       const sample = this.generateSample(type, range, index);
 
       samples.set(index, sample);
@@ -127,16 +132,16 @@ class SamplesGenerator {
    * @param {Number} specifierValue
    * @returns {Map}
    */
-  generateSample(type, range, specifierValue) {
+  generateSample(type: string, range: { from: number; to: number; }, specifierValue: { from: number; to: number; }) {
     if (type !== 'row' && type !== 'col') {
       throw new Error('Unsupported sample type');
     }
 
     const samples = new Map();
     const computedKey = type === 'row' ? 'col' : 'row';
-    const sampledValues = [];
+    const sampledValues: any[] = [];
 
-    rangeEach(range.from, range.to, (index) => {
+    rangeEach(range.from, range.to, (index: any) => {
       const { value, bundleCountSeed } = type === 'row' ? this.dataFactory(specifierValue, index) : this.dataFactory(index, specifierValue);
       const hasCustomBundleSeed = bundleCountSeed > 0;
       let length;
