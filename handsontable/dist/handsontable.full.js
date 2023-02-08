@@ -26,7 +26,7 @@
  * USE OR INABILITY TO USE THIS SOFTWARE.
  * 
  * Version: 12.3.1
- * Release date: 06/02/2023 (built at 02/02/2023 13:45:22)
+ * Release date: 06/02/2023 (built at 08/02/2023 17:45:14)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -91623,7 +91623,7 @@ Handsontable.hooks = _pluginHooks.default.getSingleton();
 Handsontable.CellCoords = _src.CellCoords;
 Handsontable.CellRange = _src.CellRange;
 Handsontable.packageName = 'handsontable';
-Handsontable.buildDate = "02/02/2023 13:45:22";
+Handsontable.buildDate = "08/02/2023 17:45:14";
 Handsontable.version = "12.3.1";
 Handsontable.languages = {
   dictionaryKeys: _registry.dictionaryKeys,
@@ -142705,9 +142705,11 @@ var DataManager = /*#__PURE__*/function () {
         rows: [],
         nodeInfo: new WeakMap()
       };
-      (0, _number.rangeEach)(0, this.data.length - 1, function (i) {
-        _this.cacheNode(_this.data[i], 0, null);
-      });
+      if (this.data) {
+        (0, _number.rangeEach)(0, this.data.length - 1, function (i) {
+          _this.cacheNode(_this.data[i], 0, null);
+        });
+      }
     }
 
     /**
