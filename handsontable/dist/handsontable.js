@@ -26,7 +26,7 @@
  * USE OR INABILITY TO USE THIS SOFTWARE.
  * 
  * Version: 12.3.1
- * Release date: 06/02/2023 (built at 08/02/2023 18:55:34)
+ * Release date: 06/02/2023 (built at 15/02/2023 14:42:54)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -41729,7 +41729,7 @@ Handsontable.hooks = _pluginHooks.default.getSingleton();
 Handsontable.CellCoords = _src.CellCoords;
 Handsontable.CellRange = _src.CellRange;
 Handsontable.packageName = 'handsontable';
-Handsontable.buildDate = "08/02/2023 18:55:34";
+Handsontable.buildDate = "15/02/2023 14:42:54";
 Handsontable.version = "12.3.1";
 Handsontable.languages = {
   dictionaryKeys: _registry.dictionaryKeys,
@@ -91992,7 +91992,7 @@ var CollapsingUI = /*#__PURE__*/function (_BaseUI) {
         rowObject = this.dataManager.getDataObject(row);
         rowIndex = row;
       }
-      if (this.dataManager.hasChildren(rowObject)) {
+      if (rowObject && this.dataManager.hasChildren(rowObject)) {
         (0, _array.arrayEach)(rowObject.__children, function (elem) {
           rowsToCollapse.push(_this2.dataManager.getRowIndex(elem));
         });
