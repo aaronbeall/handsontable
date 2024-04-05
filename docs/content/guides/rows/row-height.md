@@ -42,7 +42,9 @@ If your cell contents require heights greater than the default 23 px (because yo
 We set the same height of `40px` for all rows across the entire grid in this example.
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -60,14 +62,20 @@ const hot = new Handsontable(container, {
   rowHeaders: true,
   rowHeights: 40,
   manualRowResize: true,
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -90,6 +98,8 @@ export const ExampleComponent = () => {
       rowHeaders={true}
       rowHeights={40}
       manualRowResize={true}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -99,16 +109,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Set row heights with an array
 
 In this example, the height is only set for the first rows. Each additional row would be automatically adjusted to the content.
 
 ::: only-for javascript
+
 ::: example #example2
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -127,14 +140,20 @@ const hot = new Handsontable(container, {
   rowHeaders: true,
   rowHeights: [40, 40, 40, 40],
   manualRowResize: true,
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -158,6 +177,8 @@ export const ExampleComponent = () => {
       rowHeaders={true}
       rowHeights={[40, 40, 40, 40]}
       manualRowResize={true}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -167,16 +188,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Set row heights with a function
 
 The row height can be set using a function. In this example, the size of all rows is set using a function that takes a row `index` (1, 2 ...) and multiplies it by `20px` for each consecutive row.
 
 ::: only-for javascript
+
 ::: example #example3
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -196,14 +220,20 @@ const hot = new Handsontable(container, {
     return (index + 1) * 20;
   },
   manualRowResize: true,
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example3 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -228,6 +258,8 @@ export const ExampleComponent = () => {
         return (index + 1) * 20;
       }}
       manualRowResize={true}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -237,7 +269,9 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ## Adjust row heights manually
@@ -247,7 +281,9 @@ Set the option [`manualRowResize`](@/api/options.md#manualrowresize) to `true` t
 You can adjust the size of one or multiple rows simultaneously, even if the selected rows are not placed next to each other.
 
 ::: only-for javascript
+
 ::: example #example4
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -266,14 +302,20 @@ const hot = new Handsontable(container, {
   rowHeaders: true,
   rowHeights: 40,
   manualRowResize: true,
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example4 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -297,6 +339,8 @@ export const ExampleComponent = () => {
       rowHeaders={true}
       rowHeights={40}
       manualRowResize={true}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -306,7 +350,9 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example4'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ## Related API reference

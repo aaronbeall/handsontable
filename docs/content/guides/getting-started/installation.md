@@ -147,6 +147,8 @@ const hot = new Handsontable(container, {
   rowHeaders: true,
   colHeaders: true,
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
 });
 ```
@@ -154,6 +156,7 @@ const hot = new Handsontable(container, {
 ### Preview the result
 
 ::: example #example
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -169,9 +172,12 @@ const hot = new Handsontable(container, {
   rowHeaders: true,
   colHeaders: true,
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
 });
 ```
+
 :::
 
 :::
@@ -241,6 +247,8 @@ To set Handsontable's [configuration options](@/guides/getting-started/configura
   rowHeaders={true}
   colHeaders={true}
   height="auto"
+  autoWrapRow={true}
+  autoWrapCol={true}
   licenseKey="non-commercial-and-evaluation" // for non-commercial use only
 />
 ```
@@ -270,6 +278,8 @@ export const ExampleComponent = () => {
         rowHeaders={true}
         colHeaders={true}
         height="auto"
+        autoWrapRow={true}
+        autoWrapCol={true}
         licenseKey="non-commercial-and-evaluation" // for non-commercial use only
       />
   );
@@ -279,9 +289,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Related articles
 

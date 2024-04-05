@@ -33,7 +33,9 @@ contextMenu: true,
 To see the context menu, right-click on a cell:
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -52,14 +54,20 @@ const hot = new Handsontable(container, {
   colHeaders: true,
   contextMenu: true,
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -83,6 +91,8 @@ export const ExampleComponent = () => {
       colHeaders={true}
       contextMenu={true}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -92,7 +102,9 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 
@@ -140,7 +152,9 @@ You can define items in the menu by passing the [`contextMenu`](@/api/options.md
 To see the context menu, right-click on a cell:
 
 ::: only-for javascript
+
 ::: example #example2
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -157,16 +171,22 @@ const hot = new Handsontable(container, {
   ],
   rowHeaders: true,
   colHeaders: true,
-  contextMenu: ['row_above', 'row_below', 'remove_row'],
+  contextMenu: ['row_above', 'row_below', 'remove_row', 'clear_column'],
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -188,8 +208,10 @@ export const ExampleComponent = () => {
       ]}
       rowHeaders={true}
       colHeaders={true}
-      contextMenu={['row_above', 'row_below', 'remove_row']}
+      contextMenu={['row_above', 'row_below', 'remove_row', 'clear_column']}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -199,10 +221,13 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ## Context menu with custom options
 
 In addition to built-in options, you can equip your context menu with custom options.
@@ -210,6 +235,7 @@ In addition to built-in options, you can equip your context menu with custom opt
 To see the context menu, right-click on a cell:
 
 ::: example #example4 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { ContextMenu } from 'handsontable/plugins/contextMenu';
@@ -247,7 +273,9 @@ export const ExampleComponent = () => {
               }
             }
           }
-        }}
+        }} 
+        autoWrapRow={true}
+        autoWrapCol={true}
         licenseKey="non-commercial-and-evaluation"
       />
     </div>
@@ -258,23 +286,27 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example4'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ## Context menu with a fully custom configuration
 
 This example shows how to:
 
-* add common callback for all options
-* dynamically disable option
-* set custom text for predefined option
-* add own custom option
-* add callback for specific option
+- Add common callback for all options
+- Dynamically disable option
+- Set custom text for predefined option
+- Add own custom option
+- Add callback for specific option
 
 To see the context menu, right-click on a cell:
 
 ::: only-for javascript
+
 ::: example #example3
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -360,14 +392,20 @@ const hot = new Handsontable(container, {
         isCommand: false // Prevent clicks from executing command and closing the menu
       }
     }
-  }
+  },
+  autoWrapRow: true,
+  autoWrapCol: true
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example3 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -389,6 +427,8 @@ export const ExampleComponent = () => {
       ]}
       rowHeaders={true}
       colHeaders={true}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       height="auto"
       contextMenu={{
@@ -466,18 +506,21 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ## Related keyboard shortcuts
 
-| Windows                  | macOS                    | Action                                                        |  Excel  | Sheets  |
-| ------------------------ | ------------------------ | ------------------------------------------------------------- | :-----: | :-----: |
-| Arrow keys               | Arrow keys               | Move one available menu item up, down, left, or right         | &check; | &check; |
-| <kbd>**Page Up**</kbd>   | <kbd>**Page Up**</kbd>   | Move to the first visible item of the context menu or submenu | &check; | &cross; |
-| <kbd>**Page Down**</kbd> | <kbd>**Page Down**</kbd> | Move to the last visible item of the context menu or submenu  | &check; | &cross; |
-| <kbd>**Escape**</kbd>    | <kbd>**Escape**</kbd>    | Close the context menu or submenu                             | &check; | &check; |
-| <kbd>**Enter**</kbd>     | <kbd>**Enter**</kbd>     | Run the action of the selected menu item                      | &check; | &cross; |
+| Windows                                                                                               | macOS                                                                                                | Action                                                        |  Excel  | Sheets  |
+| ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | :-----: | :-----: |
+| <kbd>**Ctrl**</kbd>+<kbd>**Shift**</kbd>+<kbd>**\\**</kbd> or <kbd>**Shift**</kbd>+<kbd>**F10**</kbd> | <kbd>**Cmd**</kbd>+<kbd>**Shift**</kbd>+<kbd>**\\**</kbd> or <kbd>**Shift**</kbd>+<kbd>**F10**</kbd> | Open the context menu                                         | &cross; | &check; |
+| Arrow keys                                                                                            | Arrow keys                                                                                           | Move one available menu item up, down, left, or right         | &check; | &check; |
+| <kbd>**Page Up**</kbd>                                                                                | <kbd>**Page Up**</kbd>                                                                               | Move to the first visible item of the context menu or submenu | &check; | &cross; |
+| <kbd>**Page Down**</kbd>                                                                              | <kbd>**Page Down**</kbd>                                                                             | Move to the last visible item of the context menu or submenu  | &check; | &cross; |
+| <kbd>**Escape**</kbd>                                                                                 | <kbd>**Escape**</kbd>                                                                                | Close the context menu or submenu                             | &check; | &check; |
+| <kbd>**Enter**</kbd>                                                                                  | <kbd>**Enter**</kbd>                                                                                 | Run the action of the selected menu item                      | &check; | &cross; |
 
 ## Related articles
 

@@ -19,6 +19,7 @@ Create a custom cell renderer, and use it in your Angular data grid by declaring
 The following example is an implementation of `@handsontable/angular` with a custom renderer added. It takes an image URL as the input and renders the image in the edited cell.
 
 ::: example :angular --html 1 --js 2
+
 ```html
 <app-root></app-root>
 ```
@@ -65,6 +66,8 @@ export class AppComponent {
     colHeaders: true,
     rowHeights: 55,
     height: 'auto',
+    autoWrapRow: true,
+    autoWrapCol: true,
     licenseKey: 'non-commercial-and-evaluation'
   };
 }
@@ -96,6 +99,7 @@ platformBrowserDynamic()
   .catch(err => { console.error(err) });
 /* end:skip-in-preview */
 ```
+
 :::
 
 ## Related articles

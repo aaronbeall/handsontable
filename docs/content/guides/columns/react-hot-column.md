@@ -21,6 +21,7 @@ Configure your grid's columns, using the props of the `HotColumn` component. Pas
 To declare column-specific settings, pass the settings as `HotColumn` props, either separately or wrapped as a `settings` prop, exactly as you would with `HotTable`.
 
 ::: example #example1 :react --tab preview
+
 ```jsx
 import { HotTable, HotColumn } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -48,7 +49,10 @@ const secondColumnSettings = {
 
 export const ExampleComponent = () => {
   return (
-    <HotTable data={hotData} licenseKey="non-commercial-and-evaluation">
+    <HotTable data={hotData} 
+      autoWrapRow={true}
+      autoWrapCol={true}
+      licenseKey="non-commercial-and-evaluation">
       <HotColumn title="First column header" />
       <HotColumn settings={secondColumnSettings} />
     </HotTable>
@@ -59,6 +63,7 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
+
 :::
 
 ## Object data source
@@ -66,6 +71,7 @@ ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 When you use object data binding for `<HotColumn/>`, you need to provide precise information about the data structure for columns. To do so, refer to your object-based data property in `HotColumn`'s `data` prop, for example, `<HotColumn data='id' />`:
 
 ::: example #example3 :react --tab preview
+
 ```jsx
 import { HotTable, HotColumn } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -134,6 +140,8 @@ export const ExampleComponent = () => {
   return (
     <HotTable
         data={data}
+        autoWrapRow={true}
+        autoWrapCol={true}
         licenseKey="non-commercial-and-evaluation"
         autoRowSize={false}
         autoColumnSize={false}
@@ -157,4 +165,5 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
+
 :::

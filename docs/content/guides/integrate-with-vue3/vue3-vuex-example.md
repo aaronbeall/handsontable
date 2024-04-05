@@ -21,6 +21,7 @@ The following example implements the `@handsontable/vue3` component with a [`rea
 [Find out which Vue 3 versions are supported](@/guides/integrate-with-vue3/vue3-installation.md#vue-3-version-support)
 
 ::: example #example1 :vue3-vuex --html 1 --js 2
+
 ```html
 <div id="example1" class="dump-example-container">
   <div id="example-preview">
@@ -53,7 +54,9 @@ const store = createStore({
     return {
       hotData: null,
       hotSettings: {
-        readOnly: false
+        readOnly: false,
+        autoWrapRow: true,
+        autoWrapCol: true,
       }
     };
   },
@@ -81,6 +84,8 @@ const ExampleComponent = defineComponent({
         rowHeaders: true,
         readOnly: true,
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         afterChange: () => {
           if (this.hotRef) {
             store.commit('updateData', this.hotRef.getSourceData());
@@ -155,4 +160,5 @@ const app = createApp(ExampleComponent);
 app.mount('#example1');
 /* end:skip-in-preview */
 ```
+
 :::

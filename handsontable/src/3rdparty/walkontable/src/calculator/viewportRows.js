@@ -1,14 +1,22 @@
 import { RENDER_TYPE, FULLY_VISIBLE_TYPE } from './constants';
 
-const privatePool = new WeakMap();
-
+/**
+ * @typedef {object} ViewportRowsCalculatorOptions
+ * @property {number} viewportHeight Height of the viewport.
+ * @property {number} scrollOffset Current vertical scroll position of the viewport.
+ * @property {number} totalRows Total number of rows.
+ * @property {Function} rowHeightFn Function that returns the height of the row at a given index (in px).
+ * @property {Function} overrideFn Function that changes calculated this.startRow, this.endRow (used by MergeCells plugin).
+ * @property {string} calculationType String which describes types of calculation which will be performed.
+ * @property {number} horizontalScrollbarHeight The scrollbar height.
+ */
 /**
  * Calculates indexes of rows to render OR rows that are visible.
  * To redo the calculation, you need to create a new calculator.
  *
  * @class ViewportRowsCalculator
  */
-class ViewportRowsCalculator {
+export class ViewportRowsCalculator {
   /**
    * Default row height.
    *
@@ -19,62 +27,47 @@ class ViewportRowsCalculator {
   }
 
   /**
-   * @param {object} options Object with all options specified for row viewport calculation.
-   * @param {number} options.viewportSize Height of the viewport.
-   * @param {number} options.scrollOffset Current vertical scroll position of the viewport.
-   * @param {number} options.totalItems Total number of rows.
-   * @param {Function} options.itemSizeFn Function that returns the height of the row at a given index (in px).
-   * @param {Function} options.overrideFn Function that changes calculated this.startRow, this.endRow (used by MergeCells plugin).
-   * @param {string} options.calculationType String which describes types of calculation which will be performed.
-   * @param {number} options.scrollbarHeight The scrollbar height.
+   * Number of rendered/visible rows.
+   *
+   * @type {number}
    */
-  constructor({
-    viewportSize,
-    scrollOffset,
-    totalItems,
-    itemSizeFn,
-    overrideFn,
-    calculationType,
-    scrollbarHeight
-  } = {}) {
-    privatePool.set(this, {
-      viewportHeight: viewportSize,
-      scrollOffset,
-      totalRows: totalItems,
-      rowHeightFn: itemSizeFn,
-      overrideFn,
-      calculationType,
-      horizontalScrollbarHeight: scrollbarHeight
-    });
+  count = 0;
+  /**
+   * Index of the first rendered/visible row (can be overwritten using overrideFn).
+   *
+   * @type {number|null}
+   */
+  startRow = null;
+  /**
+   * Index of the last rendered/visible row (can be overwritten using overrideFn).
+   *
+   * @type {null}
+   */
+  endRow = null;
+  /**
+   * Position of the first rendered/visible row (in px).
+   *
+   * @type {number|null}
+   */
+  startPosition = null;
+  /**
+   * Determines if the viewport is visible in the trimming container.
+   *
+   * @type {boolean}
+   */
+  isVisibleInTrimmingContainer = false;
+  /**
+   * The calculator options.
+   *
+   * @type {ViewportRowsCalculatorOptions}
+   */
+  #options;
 
-    /**
-     * Number of rendered/visible rows.
-     *
-     * @type {number}
-     */
-    this.count = 0;
-
-    /**
-     * Index of the first rendered/visible row (can be overwritten using overrideFn).
-     *
-     * @type {number|null}
-     */
-    this.startRow = null;
-
-    /**
-     * Index of the last rendered/visible row (can be overwritten using overrideFn).
-     *
-     * @type {null}
-     */
-    this.endRow = null;
-
-    /**
-     * Position of the first rendered/visible row (in px).
-     *
-     * @type {number|null}
-     */
-    this.startPosition = null;
-
+  /**
+   * @param {ViewportRowsCalculatorOptions} options Object with all options specified for row viewport calculation.
+   */
+  constructor(options) {
+    this.#options = options;
     this.calculate();
   }
 
@@ -82,19 +75,22 @@ class ViewportRowsCalculator {
    * Calculates viewport.
    */
   calculate() {
+    const {
+      calculationType,
+      overrideFn,
+      rowHeightFn,
+      scrollOffset,
+      totalRows,
+      viewportHeight,
+    } = this.#options;
+    const zeroBasedScrollOffset = Math.max(this.#options.scrollOffset, 0);
+    const horizontalScrollbarHeight = this.#options.horizontalScrollbarHeight || 0;
     let sum = 0;
     let needReverse = true;
     const startPositions = [];
-
-    const priv = privatePool.get(this);
-    const calculationType = priv.calculationType;
-    const overrideFn = priv.overrideFn;
-    const rowHeightFn = priv.rowHeightFn;
-    const scrollOffset = priv.scrollOffset;
-    const totalRows = priv.totalRows;
-    const viewportHeight = priv.viewportHeight;
-    const horizontalScrollbarHeight = priv.horizontalScrollbarHeight || 0;
     let rowHeight;
+    let firstVisibleRowHeight = 0;
+    let lastVisibleRowHeight = 0;
 
     // Calculate the number (start and end index) of rows needed
     for (let i = 0; i < totalRows; i++) {
@@ -103,27 +99,43 @@ class ViewportRowsCalculator {
       if (isNaN(rowHeight)) {
         rowHeight = ViewportRowsCalculator.DEFAULT_HEIGHT;
       }
-      if (sum <= scrollOffset && calculationType !== FULLY_VISIBLE_TYPE) {
+      if (sum <= zeroBasedScrollOffset && calculationType !== FULLY_VISIBLE_TYPE) {
         this.startRow = i;
+
+        firstVisibleRowHeight = rowHeight;
       }
 
-      if (sum >= scrollOffset && sum + (calculationType === FULLY_VISIBLE_TYPE ? rowHeight : 0) <= scrollOffset + viewportHeight - horizontalScrollbarHeight) { // eslint-disable-line max-len
+      if (sum >= zeroBasedScrollOffset && sum + (calculationType === FULLY_VISIBLE_TYPE ? rowHeight : 0) <= zeroBasedScrollOffset + viewportHeight - horizontalScrollbarHeight) { // eslint-disable-line max-len
         if (this.startRow === null) {
           this.startRow = i;
+
+          firstVisibleRowHeight = rowHeight;
         }
         this.endRow = i;
       }
 
       startPositions.push(sum);
       sum += rowHeight;
+      lastVisibleRowHeight = rowHeight;
 
       if (calculationType !== FULLY_VISIBLE_TYPE) {
         this.endRow = i;
       }
-      if (sum >= scrollOffset + viewportHeight - horizontalScrollbarHeight) {
+      if (sum >= zeroBasedScrollOffset + viewportHeight - horizontalScrollbarHeight) {
         needReverse = false;
         break;
       }
+    }
+
+    const mostBottomScrollOffset = scrollOffset + viewportHeight - horizontalScrollbarHeight;
+    const topRowOffset = calculationType === FULLY_VISIBLE_TYPE ? firstVisibleRowHeight : 0;
+    const bottomRowOffset = calculationType === FULLY_VISIBLE_TYPE ? 0 : lastVisibleRowHeight;
+
+    if (mostBottomScrollOffset < topRowOffset || scrollOffset > startPositions.at(-1) + bottomRowOffset) {
+      this.isVisibleInTrimmingContainer = false;
+
+    } else {
+      this.isVisibleInTrimmingContainer = true;
     }
 
     // If the estimation has reached the last row and there is still some space available in the viewport,
@@ -149,7 +161,7 @@ class ViewportRowsCalculator {
     }
     this.startPosition = startPositions[this.startRow];
 
-    if (this.startPosition === void 0) {
+    if (this.startPosition === undefined) {
       this.startPosition = null;
     }
 
@@ -163,5 +175,3 @@ class ViewportRowsCalculator {
     }
   }
 }
-
-export default ViewportRowsCalculator;

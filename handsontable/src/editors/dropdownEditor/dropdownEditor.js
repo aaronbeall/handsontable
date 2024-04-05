@@ -18,7 +18,7 @@ export class DropdownEditor extends AutocompleteEditor {
    * @param {number|string} prop The column property (passed when datasource is an array of objects).
    * @param {HTMLTableCellElement} td The rendered cell element.
    * @param {*} value The rendered value.
-   * @param {object} cellProperties The cell meta object ({@see Core#getCellMeta}).
+   * @param {object} cellProperties The cell meta object (see {@link Core#getCellMeta}).
    */
   prepare(row, col, prop, td, value, cellProperties) {
     super.prepare(row, col, prop, td, value, cellProperties);
@@ -31,7 +31,7 @@ Hooks.getSingleton().add('beforeValidate', function(value, row, col) {
   const cellMeta = this.getCellMeta(row, this.propToCol(col));
 
   if (cellMeta.editor === DropdownEditor) {
-    if (cellMeta.strict === void 0) {
+    if (cellMeta.strict === undefined) {
       cellMeta.filter = false;
       cellMeta.strict = true;
     }

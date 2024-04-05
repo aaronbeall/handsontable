@@ -13,20 +13,25 @@ searchCategory: Guides
 
 # Formatting cells
 
+Change the appearance of cells, using custom CSS classes, inline styles, or custom cell borders.
+
 [[toc]]
 
 ## Overview
 
-Handsontable utilizes the HTML `table` structure so customization is based either on referencing to the already existing elements, such as `TR`/`TD`, or by applying your own CSS classes to HTML elements.
+Handsontable uses the HTML `table` structure so customization is based either on referencing to the already existing elements, such as `TR`/`TD`, or by applying
+your own CSS classes to HTML elements.
 
-A cell can be formatted either using a `CSS` class or with a style applied directly to the DOM element.
+You can format a cell either using a `CSS` class or with a style applied directly to the DOM element.
 
 ## Apply custom CSS class styles
 
 In this example, we add a custom class `custom-cell` to the cell in the top left corner and add a `custom-table` CSS class that highlights the table headers.
 
 ::: only-for javascript
+
 ::: example #example1 --css 1 --js 2
+
 ```css
 td.custom-cell {
   color: #fff;
@@ -37,6 +42,7 @@ td.custom-cell {
   background-color: #d7f1e1;
 }
 ```
+
 ```javascript
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -62,14 +68,20 @@ const hot = new Handsontable(container, {
     },
   ],
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation',
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react --css 1 --js 2
+
 ```css
 td.custom-cell {
   color: #fff;
@@ -80,6 +92,7 @@ td.custom-cell {
   background-color: #d7f1e1;
 }
 ```
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -102,12 +115,16 @@ export const ExampleComponent = () => {
       colHeaders={true}
       stretchH="all"
       className="custom-table"
-      cell={[{
-        row: 0,
-        col: 0,
-        className: 'custom-cell',
-      }, ]}
+      cell={[
+        {
+          row: 0,
+          col: 0,
+          className: 'custom-cell',
+        },
+      ]}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -117,16 +134,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Apply inline styles
 
 You can apply inline styles directly to the DOM element using its `style` property. You can use the [`renderer`](@/api/options.md#renderer) option to do that.
 
 ::: only-for javascript
+
 ::: example #example2
+
 ```javascript
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -159,14 +179,20 @@ const hot = new Handsontable(container, {
     },
   ],
   height: 'auto',
-  licenseKey: 'non-commercial-and-evaluation'
+  autoWrapRow: true,
+  autoWrapCol: true,
+  licenseKey: 'non-commercial-and-evaluation',
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -197,12 +223,16 @@ export const ExampleComponent = () => {
       rowHeaders={true}
       colHeaders={true}
       stretchH="all"
-      cell={[{
-        row: 0,
-        col: 0,
-        renderer: 'customStylesRenderer',
-      }]}
+      cell={[
+        {
+          row: 0,
+          col: 0,
+          renderer: 'customStylesRenderer',
+        },
+      ]}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -212,22 +242,23 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Custom cell borders
 
-To enable the custom borders feature, set the [`customBorders`](@/api/options.md#customborders) option. This can either be set as `true` or initialized as an array with a pre-defined setup. For the list of available settings and methods, visit the [API reference](@/api/customBorders.md).
+To enable the custom borders feature, set the [`customBorders`](@/api/options.md#customborders) option. This can either be set as `true` or initialized as an
+array with a pre-defined setup. For the list of available settings and methods, visit the [API reference](@/api/customBorders.md).
 
-In the names of the API properties, the words `start` and `end` refer to the starting and ending edges of the [layout direction](@/guides/internationalization/layout-direction.md).
-
-::: tip
-The `start` and `end` properties used to be called `left` and `right` before Handsontable 12.0.0. The old names `left` and `right` work in the LTR layout direction but throw an error when the layout direction is set to RTL.
-:::
+In the names of the API properties, the words `start` and `end` refer to the starting and ending edges of the
+[layout direction](@/guides/internationalization/layout-direction.md).
 
 ::: only-for javascript
+
 ::: example #example3
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -243,6 +274,8 @@ const hot = Handsontable(container, {
   ],
   rowHeaders: true,
   colHeaders: true,
+  autoWrapRow: true,
+  autoWrapCol: true,
   stretchH: 'all',
   height: 'auto',
   licenseKey: 'non-commercial-and-evaluation',
@@ -251,50 +284,54 @@ const hot = Handsontable(container, {
       range: {
         from: {
           row: 1,
-          col: 1
+          col: 1,
         },
         to: {
           row: 3,
-          col: 4
-        }
+          col: 4,
+        },
       },
       top: {
         width: 2,
-        color: '#5292F7'
+        color: '#5292F7',
       },
       bottom: {
         width: 2,
-        color: 'red'
+        color: 'red',
       },
       start: {
         width: 2,
-        color: 'orange'
+        color: 'orange',
       },
       end: {
         width: 2,
-        color: 'magenta'
-      }
+        color: 'magenta',
+      },
     },
     {
       row: 2,
       col: 2,
       start: {
         width: 2,
-        color: 'red'
+        color: 'red',
       },
       end: {
         width: 1,
-        color: 'green'
-      }
-    }
-  ]
+        color: 'green',
+      },
+    },
+  ],
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example3 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -317,47 +354,50 @@ export const ExampleComponent = () => {
       colHeaders={true}
       stretchH="all"
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
-      customBorders={[{
-        range: {
-          from: {
-            row: 1,
-            col: 1
+      customBorders={[
+        {
+          range: {
+            from: {
+              row: 1,
+              col: 1,
+            },
+            to: {
+              row: 3,
+              col: 4,
+            },
           },
-          to: {
-            row: 3,
-            col: 4
-          }
+          top: {
+            width: 2,
+            color: '#5292F7',
+          },
+          bottom: {
+            width: 2,
+            color: 'red',
+          },
+          start: {
+            width: 2,
+            color: 'orange',
+          },
+          end: {
+            width: 2,
+            color: 'magenta',
+          },
         },
-        top: {
-          width: 2,
-          color: '#5292F7'
-        },
-        bottom: {
-          width: 2,
-          color: 'red'
-        },
-        start: {
-          width: 2,
-          color: 'orange'
-        },
-        end: {
-          width: 2,
-          color: 'magenta'
-        }
-      },
         {
           row: 2,
           col: 2,
           start: {
             width: 2,
-            color: 'red'
+            color: 'red',
           },
           end: {
             width: 1,
-            color: 'green'
-          }
-        }
+            color: 'green',
+          },
+        },
       ]}
     />
   );
@@ -367,9 +407,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Related articles
 

@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
-import { render } from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import { createRoot } from 'react-dom/client';
+import { act } from '@testing-library/react';
 import { HotTable } from '../src/hotTable';
-import { addUnsafePrefixes } from '../src/helpers';
 import { BaseEditorComponent } from '../src/baseEditorComponent';
 
 const SPEC = {
-  container: null
+  container: null,
+  root: null,
 };
 
 beforeEach(() => {
@@ -15,6 +15,7 @@ beforeEach(() => {
   container.id = 'hotContainer';
   document.body.appendChild(container);
   SPEC.container = container;
+  SPEC.root = createRoot(SPEC.container);
 });
 
 afterEach(() => {
@@ -22,19 +23,17 @@ afterEach(() => {
 
   container.parentNode.removeChild(container);
   SPEC.container = null;
+
+  act(() => {
+    SPEC.root.unmount();
+  });
 });
 
-export function mountComponent(Component, container = SPEC.container) {
+export function mountComponentWithRef(Component, strictMode = true) {
   let hotTableComponent = null;
 
   const App = () => {
     hotTableComponent = useRef(null);
-
-    if (!Component.type.prototype || !Component.type.prototype.isReactComponent) {
-      return (
-        <Component.type {...Component.props}></Component.type>
-      );
-    }
 
     return (
       <Component.type {...Component.props} ref={hotTableComponent}></Component.type>
@@ -42,10 +41,24 @@ export function mountComponent(Component, container = SPEC.container) {
   }
 
   act(() => {
-    render(<App/>, container);
+    SPEC.root.render(
+      strictMode ? <React.StrictMode><App/></React.StrictMode> : <App/>
+    );
   });
 
-  return hotTableComponent?.current;
+  return hotTableComponent.current;
+}
+
+export function mountComponent(Component) {
+  const App = () => {
+    return (
+      <Component.type {...Component.props}></Component.type>
+    );
+  }
+
+  act(() => {
+    SPEC.root.render(<React.StrictMode><App/></React.StrictMode>);
+  });
 }
 
 export function sleep(delay = 100) {
@@ -169,16 +182,7 @@ export function simulateMouseEvent(element, type) {
 
 class IndividualPropsWrapper extends React.Component<{ref?: string, id?: string}, {hotSettings?: object}> {
   hotTable: typeof HotTable;
-
-  constructor(props) {
-    super(props);
-
-    addUnsafePrefixes(this);
-  }
-
-  componentWillMount() {
-    this.setState({});
-  }
+  state = {};
 
   private setHotElementRef(component: typeof HotTable): void {
     this.hotTable = component;
@@ -203,19 +207,10 @@ export { IndividualPropsWrapper };
 
 class SingleObjectWrapper extends React.Component<{ref?: string, id?: string}, {hotSettings?: object}> {
   hotTable: typeof HotTable;
-
-  constructor(props) {
-    super(props);
-
-    addUnsafePrefixes(this);
-  }
+  state = {};
 
   private setHotElementRef(component: typeof HotTable): void {
     this.hotTable = component;
-  }
-
-  componentWillMount() {
-    this.setState({});
   }
 
   render(): React.ReactElement {

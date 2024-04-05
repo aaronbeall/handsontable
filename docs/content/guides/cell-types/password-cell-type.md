@@ -22,7 +22,9 @@ Use the password cell type to mask confidential values by rendering entered char
 The password cell type behaves like a text cell, the only difference being that it masks its value using asterisks in the cell renderer. An `<input type="password">` field is used for the cell editor. Data is stored in the data source as plain text.
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -42,14 +44,20 @@ const hot = new Handsontable(container, {
     { data: 'name.first' },
     { data: 'name.last' },
     { data: 'password', type: 'password' }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -68,6 +76,8 @@ export const ExampleComponent = () => {
       ]}
       colHeaders={['ID', 'First name', 'Last name', 'Password']}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       columns={[
         { data: 'id' },
@@ -83,16 +93,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Fixed hash length
 
 By default, every hash has a length equal to the length of its corresponding value. Use option `hashLength` to set a fixed hash length.
 
 ::: only-for javascript
+
 ::: example #example2
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -112,14 +125,20 @@ const hot = new Handsontable(container, {
     { data: 'name.first' },
     { data: 'name.last' },
     { data: 'password', type: 'password', hashLength: 10 }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -138,6 +157,8 @@ export const ExampleComponent = () => {
       ]}
       colHeaders={['ID', 'First name', 'Last name', 'Password']}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       columns={[
         { data: 'id' },
@@ -153,16 +174,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Custom hash symbol
 
 By default, every hash consists of asterisks `*`. Use the option `hashSymbol` to set a custom hash symbol. You can use any character, entity, or even HTML. Note that you can't change the symbol used by the input field due to browser limitations.
 
 ::: only-for javascript
+
 ::: example #example3
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -182,14 +206,20 @@ const hot = new Handsontable(container, {
     { data: 'name.first' },
     { data: 'name.last' },
     { data: 'password', type: 'password', hashSymbol: '&#9632;' }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example3 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -208,6 +238,8 @@ export const ExampleComponent = () => {
       ]}
       colHeaders={['ID', 'First name', 'Last name', 'Password']}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       columns={[
         { data: 'id' },
@@ -223,9 +255,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Related articles
 

@@ -2,8 +2,8 @@
  * Modifies the symlinks in `node_modules` for the defined packages.
  * Used to alias packages for internal importing.
  */
-import fse from 'fs-extra';
 import path from 'path';
+import fse from 'fs-extra';
 import {
   displayConfirmationMessage,
   displayWarningMessage
@@ -49,7 +49,7 @@ if (pkgName && PACKAGE_LOCATIONS.has(pkgName)) {
 
 } else {
   displayWarningMessage(
-    `No package location for provided ${pkgName}, doing nothing. Known page names: ${
+    `No package location for provided ${pkgName}, doing nothing. Known packages names: ${
       Array.from(PACKAGE_LOCATIONS.keys()).join(', ')
     }.`);
 }

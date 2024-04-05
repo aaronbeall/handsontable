@@ -19,6 +19,7 @@ Create a custom cell editor, and use it in your Angular data grid by declaring i
 The following is an implementation of the `@handsontable/angular` component with a custom editor added. It utilizes the `placeholder` attribute in the editor's `input` element.
 
 ::: example :angular --html 1 --js 2 --no-edit
+
 ```html
 <app-root></app-root>
 ```
@@ -49,6 +50,8 @@ export class AppComponent {
     ],
     colHeaders: true,
     colWidths: 200,
+    autoWrapRow: true,
+    autoWrapCol: true,
     licenseKey: 'non-commercial-and-evaluation'
   };
 }
@@ -96,6 +99,7 @@ platformBrowserDynamic()
   .catch(err => { console.error(err) });
 /* end:skip-in-preview */
 ```
+
 :::
 
 ## Related articles

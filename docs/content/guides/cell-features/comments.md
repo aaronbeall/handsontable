@@ -24,18 +24,23 @@ Add a comment (a note) to a cell, using the context menu, just like in Excel. Ed
 Set the [`comments`](@/api/options.md#comments) configuration option to `true` to enable the feature and add all the needed context menu items. For example:
 
 ::: only-for javascript
+
 ```js
 const hot = new Handsontable(container, {
   data: [
     ['A1', 'B1', 'C1'],
     ['A2', 'B2', 'C2'],
   ],
-  comments: true
+  comments: true,
+  autoWrapRow: true,
+  autoWrapCol: true
 });
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 <HotTable
   data={[
@@ -45,34 +50,39 @@ const hot = new Handsontable(container, {
   comments={true}
 />
 ```
+
 :::
 
 ## Add comments via the context menu
 
 After you've enabled the plugin, the [Context Menu](@/guides/accessories-and-menus/context-menu.md) gains a few new items:
 
-* Add/Edit comment
-* Delete comment
-* Read-only comment
+- Add/Edit comment
+- Delete comment
+- Read-only comment
 
 ## Set up pre-set comments
 
-You can also pre-define comments for your table. Comments are stored in the table's/column's/cell's metadata object and can be declared as any value of that type. For example:
+You can also pre-define comments for your table. Comments are stored in the table's/column's/cell's metadata object and you can declare as any value of the respective type. For example:
 
 ::: only-for javascript
+
 ```js
 cell: [
   { row: 1, col: 1, comment: { value: 'Hello world!' } }
 ]
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 cell={[
   { row: 1, col: 1, comment: { value: 'Hello world!' } }
 ]}
 ```
+
 :::
 
 In this example, the comment "Hello world!" is added to the cell at `(1,1)`.
@@ -80,7 +90,9 @@ In this example, the comment "Hello world!" is added to the cell at `(1,1)`.
 ## Basic example
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -104,14 +116,20 @@ const hot = new Handsontable(container, {
     { row: 2, col: 2, comment: { value: 'More comments' } }
   ],
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -140,6 +158,8 @@ export const ExampleComponent = () => {
         { row: 2, col: 2, comment: { value: 'More comments' } }
       ]}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -149,16 +169,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Make a comment read-only
 
-By default, all comments are editable. To change this, set the [`readOnly`](@/api/options.md#comments) configuration option to `true` when adding a comment. This example makes the "Tesla" comment attached to a cell read-only, whereas the "Honda" comment attached to another cell is editable.
+By default, all comments are editable. To change this, set the [`readOnly`](@/api/options.md#readonly) configuration option to `true` when adding a comment. This example makes the "Tesla" comment attached to a cell read-only, whereas the "Honda" comment attached to another cell is editable.
 
 ::: only-for javascript
+
 ::: example #example2
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -180,14 +203,20 @@ const hot = new Handsontable(container, {
     { row: 0, col: 3, comment: { value: 'You can edit this comment' } }
   ],
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -214,6 +243,8 @@ export const ExampleComponent = () => {
         { row: 0, col: 3, comment: { value: 'You can edit this comment' } }
       ]}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -223,16 +254,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Set a comment box's size
 
 To set the width and height of a comment box, use the [`style`](@/api/options.md#comments) parameter.
 
 ::: only-for javascript
+
 ::: example #example3
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -255,14 +289,20 @@ const hot = new Handsontable(container, {
     { row: 2, col: 2, comment: { value: 'Comment 200x50 px', style: { width: 200, height: 50 } } }
   ],
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example3 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -290,6 +330,8 @@ export const ExampleComponent = () => {
         { row: 2, col: 2, comment: { value: 'Comment 200x50 px', style: { width: 200, height: 50 } } }
       ]}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -299,16 +341,19 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Set a delay for displaying comments
 
 To display comments after a pre-configured time delay, use the [`displayDelay`](@/api/options.md#comments) parameter.
 
 ::: only-for javascript
+
 ::: example #example4
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -332,14 +377,20 @@ const hot = new Handsontable(container, {
     { row: 1, col: 1, comment: { value: 'Some comment' } },
   ],
   height: 'auto',
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example4 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -368,6 +419,8 @@ export const ExampleComponent = () => {
         { row: 1, col: 1, comment: { value: 'Some comment' } },
       ]}
       height="auto"
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -377,9 +430,18 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example4'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
+
+## Related keyboard shortcuts
+
+| Windows                                                 | macOS                                                      | Action                                  |  Excel  | Sheets  |
+| ------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------- | :-----: | :-----: |
+| <kbd>**Ctrl**</kbd>+<kbd>**Alt**</kbd>+<kbd>**M**</kbd> | <kbd>**Ctrl**</kbd>+<kbd>**Option**</kbd>+<kbd>**M**</kbd> | Add or edit a comment                   | &cross; | &check; |
+| <kbd>**Ctrl**</kbd>+<kbd>**Enter**</kbd>                | <kbd>**Cmd**</kbd>+<kbd>**Enter**</kbd>                    | Save and exit the current comment       | &cross; | &check; |
+| <kbd>**Escape**</kbd>                                   | <kbd>**Escape**</kbd>                                      | Exit the current comment without saving | &cross; | &cross; |
 
 ## Related API reference
 

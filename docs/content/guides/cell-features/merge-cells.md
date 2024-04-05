@@ -13,7 +13,7 @@ searchCategory: Guides
 
 # Merge cells
 
-Merge adjacent cells, using the <kbd>**Ctrl**</kbd> + <kbd>**M**</kbd> shortcut or the context menu. Control merged cells, using Handsontable's API.
+Merge adjacent cells, using the <kbd>**Ctrl**</kbd>+<kbd>**M**</kbd> shortcut or the context menu. Control merged cells, using Handsontable's API.
 
 [[toc]]
 
@@ -32,15 +32,21 @@ To enable the merge cells feature, set the [`mergeCells`](@/api/options.md#merge
 To initialize Handsontable with predefined merged cells, provide merged cells details in form of an array:
 
 ::: only-for javascript
+
 `mergeCells: [{ row: 1, col: 1, rowspan: 2, colspan: 2 }]`
+
 :::
 
 ::: only-for react
+
 `mergeCells={[{ row: 1, col: 1, rowspan: 2, colspan: 2 }]}`
+
 :::
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -66,14 +72,20 @@ const hot = new Handsontable(container, {
     { row: 3, col: 4, rowspan: 2, colspan: 2 },
     { row: 5, col: 6, rowspan: 3, colspan: 3 }
   ],
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -104,6 +116,8 @@ export const ExampleComponent = () => {
         { row: 3, col: 4, rowspan: 2, colspan: 2 },
         { row: 5, col: 6, rowspan: 3, colspan: 3 }
       ]}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -113,15 +127,16 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Related keyboard shortcuts
 
 | Windows                                | macOS                                  | Action                              |  Excel  | Sheets  |
 | -------------------------------------- | -------------------------------------- | ----------------------------------- | :-----: | :-----: |
-| <kbd>**Ctrl**</kbd> + <kbd>**M**</kbd> | <kbd>**Ctrl**</kbd> + <kbd>**M**</kbd> | Merge or unmerge the selected cells | &cross; | &cross; |
+| <kbd>**Ctrl**</kbd>+<kbd>**M**</kbd> | <kbd>**Ctrl**</kbd>+<kbd>**M**</kbd> | Merge or unmerge the selected cells | &cross; | &cross; |
 
 ## Related API reference
 

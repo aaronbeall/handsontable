@@ -19,6 +19,7 @@ Reference the Handsontable instance from a Vue 2 component to programmatically p
 The following example implements the `@handsontable/vue`, showing how to reference the Handsontable instance from the wrapper component.
 
 ::: example #example1 :vue --html 1 --js 2
+
 ```html
 <div id="example1">
   <hot-table ref="hotTableComponent" :settings="hotSettings"></hot-table><br/>
@@ -45,6 +46,8 @@ const ExampleComponent = {
         ],
         colHeaders: true,
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         licenseKey: 'non-commercial-and-evaluation'
       }
     }
@@ -69,4 +72,5 @@ new Vue({
 });
 /* end:skip-in-preview */
 ```
+
 :::

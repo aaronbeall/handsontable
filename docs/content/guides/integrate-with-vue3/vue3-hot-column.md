@@ -21,6 +21,7 @@ Configure the Vue 3 data grid's columns, using the props of the `HotColumn` comp
 To declare column-specific settings, pass the settings as `hot-column` properties, either separately or wrapped as a `settings` property, exactly as you would for `hot-table`.
 
 ::: example #example1 :vue3 --html 1 --js 2
+
 ```html
 <div id="example1">
   <hot-table :settings="hotSettings">
@@ -58,6 +59,8 @@ const ExampleComponent = defineComponent({
           ['A10', 'B10'],
         ],
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         licenseKey: 'non-commercial-and-evaluation',
       },
       secondColumnSettings: {
@@ -81,6 +84,7 @@ const app = createApp(ExampleComponent);
 app.mount('#example1');
 /* end:skip-in-preview */
 ```
+
 :::
 
 ## Array of objects
@@ -88,6 +92,7 @@ app.mount('#example1');
 To work with an array of objects for the `hot-column` component, you need to provide precise information about the data structure for the columns. To do this, refer to the data for a column in properties as `data`.
 
 ::: example #example2 :vue3 --html 1 --js 2
+
 ```html
 <div id="example2">
   <hot-table :data="hotData" :settings="settings">
@@ -124,6 +129,8 @@ data() {
       },
       settings: {
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         licenseKey: 'non-commercial-and-evaluation'
       },
     };
@@ -144,4 +151,5 @@ const app = createApp(ExampleComponent);
 app.mount('#example2');
 /* end:skip-in-preview */
 ```
+
 :::

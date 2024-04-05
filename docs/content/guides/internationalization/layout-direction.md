@@ -50,7 +50,9 @@ For Arabic, use Handsontable's built-in [Arabic translation](@/guides/internatio
 To try out Handsontable's RTL support, check out the demo below:
 
 ::: only-for javascript
+
 ::: example #example1 :hot-lang
+
 ```js
 import Handsontable from 'handsontable';
 import { registerLanguageDictionary, arAR } from 'handsontable/i18n';
@@ -101,14 +103,20 @@ const hot = new Handsontable(container, {
   // enable a few options that exemplify the layout direction
   dropdownMenu: true,
   filters: true,
-  contextMenu: true
+  contextMenu: true,
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react-languages
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -149,6 +157,8 @@ function generateArabicData() {
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={generateArabicData()}
       colHeaders={true}
@@ -167,9 +177,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ### Elements affected by layout direction
 
@@ -187,7 +198,7 @@ Setting a different layout direction affects the behavior of the following areas
 | Position of the [selection](@/guides/cell-features/selection.md) handles, on mobile devices                        | On mobile devices, the selection handles display in the top-left and bottom-right corners of the selection border.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | On mobile devices, the selection handles display in the top-right and bottom-left corners of the selection border.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | [Custom borders](@/guides/cell-features/formatting-cells.md#custom-cell-borders)                                   | In the [`customBorders`](@/api/options.md#customborders) option:<br><br>- The left-hand border is treated as the starting border.<br>- The right-hand border is treated as the ending border.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | In the [`customBorders`](@/api/options.md#customborders) option:<br><br>- The right-hand border is treated as the starting border.<br>- The left-hand border is treated as the ending border.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | [Context menu](@/guides/accessories-and-menus/context-menu.md) and [column menus](@/guides/columns/column-menu.md) | Menus' layout direction is left-to-right.<br><br>Submenus expand to the right.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Menus' layout direction is right-to-left.<br><br>Submenus expand to the left.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| [Keyboard navigation](@/guides/accessories-and-menus/keyboard-shortcuts.md)                                        | <kbd>**Tab**</kbd> moves one cell to the right.<br><br><kbd>**Shift**</kbd> + <kbd>**Tab**</kbd> moves one cell to the left.<br><br><kbd>**Home**</kbd> moves to the leftmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd> + <kbd>**Home**</kbd> moves to the top-left non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd> + <kbd>**Home**</kbd> extends the selection to the leftmost non-frozen cell of the current row.<br><br><kbd>**End**</kbd> moves to the rightmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd> + <kbd>**End**</kbd> moves to the bottom-right non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd> + <kbd>**End**</kbd> extends the selection to the rightmost non-frozen cell of the current row.<br><br><kbd>**Delete**</kbd> deletes one character to the right of the cursor.<br><br><kbd>**Backspace**</kbd> deletes one character to the left of the cursor. | <kbd>**Tab**</kbd> moves one cell to the left.<br><br><kbd>**Shift**</kbd> + <kbd>**Tab**</kbd> moves one cell to the right.<br><br><kbd>**Home**</kbd> moves to the rightmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd> + <kbd>**Home**</kbd> moves to the top-right non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd> + <kbd>**Home**</kbd> extends the selection to the rightmost non-frozen cell of the current row.<br><br><kbd>**End**</kbd> moves to the leftmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd> + <kbd>**End**</kbd> moves to the bottom-left non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd> + <kbd>**End**</kbd> extends the selection to the leftmost non-frozen cell of the current row.<br><br><kbd>**Delete**</kbd> deletes one character to the left of the cursor.<br><br><kbd>**Backspace**</kbd> deletes one character to the right of the cursor. |
+| [Keyboard navigation](@/guides/navigation/keyboard-shortcuts.md)                                        | <kbd>**Tab**</kbd> moves one cell to the right.<br><br><kbd>**Shift**</kbd>+<kbd>**Tab**</kbd> moves one cell to the left.<br><br><kbd>**Home**</kbd> moves to the leftmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd>+<kbd>**Home**</kbd> moves to the top-left non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd>+<kbd>**Home**</kbd> extends the selection to the leftmost non-frozen cell of the current row.<br><br><kbd>**End**</kbd> moves to the rightmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd>+<kbd>**End**</kbd> moves to the bottom-right non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd>+<kbd>**End**</kbd> extends the selection to the rightmost non-frozen cell of the current row.<br><br><kbd>**Delete**</kbd> deletes one character to the right of the cursor.<br><br><kbd>**Backspace**</kbd> deletes one character to the left of the cursor. | <kbd>**Tab**</kbd> moves one cell to the left.<br><br><kbd>**Shift**</kbd>+<kbd>**Tab**</kbd> moves one cell to the right.<br><br><kbd>**Home**</kbd> moves to the rightmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd>+<kbd>**Home**</kbd> moves to the top-right non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd>+<kbd>**Home**</kbd> extends the selection to the rightmost non-frozen cell of the current row.<br><br><kbd>**End**</kbd> moves to the leftmost non-frozen cell of the current row.<br><br><kbd>**Ctrl**</kbd>/<kbd>**Cmd**</kbd>+<kbd>**End**</kbd> moves to the bottom-left non-frozen cell of the grid.<br><br><kbd>**Shift**</kbd>+<kbd>**End**</kbd> extends the selection to the leftmost non-frozen cell of the current row.<br><br><kbd>**Delete**</kbd> deletes one character to the left of the cursor.<br><br><kbd>**Backspace**</kbd> deletes one character to the right of the cursor. |
 
 The list above is not exhaustive. Setting a different layout direction might affect other areas of Handsontable as well.
 
@@ -208,7 +219,9 @@ and set it to `'inherit'`. As this is the default setting, you can also skip set
 In the example below, the RTL layout direction is inherited from a `dir` attribute up in the DOM tree:
 
 ::: only-for javascript
+
 ::: example #example2 --html 1 --js 2
+
 ```html
 <section dir="rtl">
   <div id="example2"></div>
@@ -233,13 +246,19 @@ const hot = new Handsontable(container, {
   // inherit Handsontable's layout direction
   // from the value of your HTML document's `dir` attribute
   layoutDirection: 'inherit',
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -252,6 +271,8 @@ export const ExampleComponent = () => {
   return (
     <section dir="rtl">
       <HotTable
+        autoWrapRow={true}
+        autoWrapCol={true}
         licenseKey="non-commercial-and-evaluation"
         data={[
           ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
@@ -272,9 +293,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ### Set the layout direction to RTL
 
@@ -284,7 +306,9 @@ At Handsontable's initialization, add [`layoutDirection`](@/api/options.md#layou
 and set it to `'rtl'`:
 
 ::: only-for javascript
+
 ::: example #example3
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -304,13 +328,19 @@ const hot = new Handsontable(container, {
   // render Handsontable from the right to the left
   // regardless of your HTML document's `dir`
   layoutDirection: 'rtl',
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example3 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -322,6 +352,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
@@ -341,9 +373,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example3'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ### Set the layout direction to LTR
 
@@ -353,7 +386,9 @@ At Handsontable's initialization, add [`layoutDirection`](@/api/options.md#layou
 and set it to `'ltr'`:
 
 ::: only-for javascript
+
 ::: example #example4
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -373,13 +408,19 @@ const hot = new Handsontable(container, {
   // render Handsontable from the left to the right
   // regardless of your HTML document's `dir`
   layoutDirection: 'ltr',
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example4 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -391,6 +432,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
@@ -410,9 +453,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example4'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Set the horizontal text alignment
 
@@ -421,7 +465,9 @@ You can apply different horizontal [text alignment](@/guides/cell-features/text-
 In the example below, some columns are explicitly aligned to the left, center, or right:
 
 ::: only-for javascript
+
 ::: example #example5
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -450,14 +496,20 @@ const hot = new Handsontable(container, {
     // align this column's text to the right
     { className: 'htRight' },
     {},
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example5 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -469,6 +521,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
@@ -498,9 +552,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example5'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 You can apply the horizontal text alignment settings to:
 - [The entire grid](@/guides/getting-started/configuration-options.md#set-grid-options), by setting [`className`](@/api/options.md#classname) on the global level

@@ -28,7 +28,9 @@ To track changes made in your data grid, use Handsontable's [`afterChange`](@/ap
 The example below handles data by using `fetch`. Note that this is just a mockup, and nothing is actually saved. You need to implement the server-side part by yourself.
 
 ::: only-for javascript
+
 ::: example #example1 --html 1 --js 2
+
 ```html
 <div id="example1"></div>
 
@@ -82,7 +84,9 @@ const hot = new Handsontable(container, {
         exampleConsole.innerText = `Autosaved (${change.length} cell${change.length > 1 ? 's' : ''})`;
         console.log('The POST request is only used here for the demo purposes');
       });
-  }
+  },
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 
 load.addEventListener('click', () => {
@@ -119,11 +123,15 @@ autosave.addEventListener('click', () => {
   }
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { useEffect, useState, useRef } from 'react';
 import { HotTable } from '@handsontable/react';
@@ -189,6 +197,8 @@ export const ExampleComponent = () => {
         rowHeaders={true}
         colHeaders={true}
         height="auto"
+        autoWrapRow={true}
+        autoWrapCol={true}
         licenseKey="non-commercial-and-evaluation"
         afterChange={function(change, source) {
           if (source === 'loadData') {
@@ -232,7 +242,9 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ## Save data locally
@@ -243,9 +255,9 @@ Persistent state storage is particularly useful when running multiple instances 
 
 When the [`persistentState`](@/api/options.md#persistentstate) option is enabled, the [`PersistentState`](@/api/persistentState.md) plugin exposes hooks listed below:
 
-* [`persistentStateSave`](@/api/hooks.md#persistentstatesave)
-* [`persistentStateLoad`](@/api/hooks.md#persistentstateload)
-* [`persistentStateReset`](@/api/hooks.md#persistentstatereset)
+- [`persistentStateSave`](@/api/hooks.md#persistentstatesave)
+- [`persistentStateLoad`](@/api/hooks.md#persistentstateload)
+- [`persistentStateReset`](@/api/hooks.md#persistentstatereset)
 
 ## [`PersistentState`](@/api/persistentState.md) vs `localStorage`
 

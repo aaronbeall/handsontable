@@ -21,6 +21,7 @@ The following example implements the `@handsontable/vue` component with a [`read
 Toggle [`readOnly`](@/api/options.md#readonly) for the entire table.
 
 ::: example #example1 :vue-vuex --html 1 --js 2
+
 ```html
 <div id="example1" class="dump-example-container">
   <div id="example-preview">
@@ -64,6 +65,8 @@ const ExampleComponent = {
         rowHeaders: true,
         readOnly: true,
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         afterChange: () => {
           if (this.hotRef) {
             this.$store.commit('updateData', this.hotRef.getSourceData());
@@ -131,7 +134,9 @@ const ExampleComponent = {
     state: {
       hotData: null,
       hotSettings: {
-        readOnly: false
+        readOnly: false,
+        autoWrapRow: true,
+        autoWrapCol: true,
       }
     },
     mutations: {
@@ -154,4 +159,5 @@ new Vue({
 });
 /* end:skip-in-preview */
 ```
+
 :::

@@ -19,6 +19,7 @@ Configure your Vue 2 data grid with different number formats, depending on the s
 The following example shows a Handsontable instance with translations set up in Vue 2.
 
 ::: example #example1 :vue-numbro --html 1 --js 2
+
 ```html
 <div id="example1">
   <hot-table :data="hotData" :settings="settings">
@@ -91,6 +92,8 @@ data() {
       ],
       settings: {
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         licenseKey: 'non-commercial-and-evaluation'
       }
     };
@@ -110,6 +113,7 @@ new Vue({
 });
 /* end:skip-in-preview */
 ```
+
 :::
 
 ## Related articles

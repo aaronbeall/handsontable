@@ -65,7 +65,6 @@ const columnsItems = [
   { path: 'guides/columns/column-width' },
   { path: 'guides/columns/column-summary' },
   { path: 'guides/columns/column-virtualization' },
-  { path: 'guides/columns/column-sorting' },
   { path: 'guides/columns/column-menu' },
   { path: 'guides/columns/column-filter' },
 ];
@@ -78,7 +77,7 @@ const rowsItems = [
   { path: 'guides/rows/row-freezing' },
   { path: 'guides/rows/row-height' },
   { path: 'guides/rows/row-virtualization' },
-  { path: 'guides/rows/row-sorting' },
+  { path: 'guides/rows/rows-sorting' },
   { path: 'guides/rows/row-trimming' },
   { path: 'guides/rows/row-prepopulating' },
 ];
@@ -119,11 +118,19 @@ const formulasItems = [
   { path: 'guides/formulas/formula-calculation' },
 ];
 
+const navigationItems = [
+  { path: 'guides/navigation/keyboard-shortcuts' },
+  { path: 'guides/navigation/custom-shortcuts' },
+  { path: 'guides/navigation/searching-values' },
+];
+
+const accessibilityItems = [
+  { path: 'guides/accessibility/accessibility' },
+];
+
 const accessoriesAndMenusItems = [
   { path: 'guides/accessories-and-menus/context-menu' },
   { path: 'guides/accessories-and-menus/undo-redo' },
-  { path: 'guides/accessories-and-menus/keyboard-shortcuts' },
-  { path: 'guides/accessories-and-menus/searching-values' },
   { path: 'guides/accessories-and-menus/icon-pack' },
   { path: 'guides/accessories-and-menus/export-to-csv' },
   // TODO { path: 'guides/accessories-and-menus/export-to-excel' },
@@ -174,6 +181,8 @@ const upgradeAndMigrationItems = [
   { path: 'guides/upgrade-and-migration/migrating-from-9.0-to-10.0' },
   { path: 'guides/upgrade-and-migration/migrating-from-10.0-to-11.0' },
   { path: 'guides/upgrade-and-migration/migrating-from-11.1-to-12.0' },
+  { path: 'guides/upgrade-and-migration/migrating-from-12.4-to-13.0' },
+  { path: 'guides/upgrade-and-migration/migrating-from-13.1-to-14.0' },
 ];
 
 module.exports = {
@@ -188,6 +197,8 @@ module.exports = {
     { title: 'Cell functions', children: cellFunctionsItems },
     { title: 'Cell types', children: cellTypesItems },
     { title: 'Formulas', children: formulasItems },
+    { title: 'Navigation', children: navigationItems },
+    { title: 'Accessibility', children: accessibilityItems },
     { title: 'Accessories and menus', children: accessoriesAndMenusItems },
     { title: 'Internationalization', children: internationalizationItems },
     { title: 'Tools and building', children: buildingAndToolingItems },

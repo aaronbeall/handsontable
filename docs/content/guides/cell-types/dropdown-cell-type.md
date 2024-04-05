@@ -26,15 +26,21 @@ The dropdown cell type is based on an autocomplete cell type and can also be sea
 This example shows the usage of the dropdown feature. Dropdown is based on [Autocomplete](@/guides/cell-types/autocomplete-cell-type.md) cell type. All options used by `autocomplete` cell type apply to `dropdown` as well.
 
 ::: only-for javascript
+
 Internally, cell `{type: 'dropdown'}` is equivalent to cell `{type: 'autocomplete', strict: true, filter: false}`. Therefore you can think of `dropdown` as a searchable `<select>`.
+
 :::
 
 ::: only-for react
+
 Internally, cell `type="dropdown"` is equivalent to cell `type="autocomplete" strict={true} filter={false}`. Therefore you can think of `dropdown` as a searchable `<select>`.
+
 :::
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -60,14 +66,20 @@ const hot = new Handsontable(container, {
       source: ['yellow', 'red', 'orange', 'green', 'blue', 'gray', 'black', 'white']
     }
   ],
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: 'non-commercial-and-evaluation'
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -98,6 +110,8 @@ export const ExampleComponent = () => {
           source: ['yellow', 'red', 'orange', 'green', 'blue', 'gray', 'black', 'white']
         }
       ]}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     />
   );
@@ -107,9 +121,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Related articles
 

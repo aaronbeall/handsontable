@@ -6,8 +6,6 @@ const SOURCE_LANGUAGES_DIRECTORY = 'src/i18n/languages';
 const OUTPUT_LANGUAGES_DIRECTORY = 'languages';
 
 const path = require('path');
-const StringReplacePlugin  = require('string-replace-webpack-plugin');
-const WebpackOnBuildPlugin = require('on-build-webpack');
 const fs  = require('fs');
 const fsExtra  = require('fs-extra');
 
@@ -36,29 +34,32 @@ function getEntryJsFiles() {
 
 const ruleForSnippetsInjection = {
   test: /\.js$/,
-  loader: StringReplacePlugin.replace({
-    replacements: [
+  loader: 'string-replace-loader',
+  options: {
+    multiple: [
       {
-        pattern: /import.+constants.+/,
-        replacement: function() {
+        search: /import.+constants.+/,
+        replace() {
           // Adding the `index.js` file at the end of the import path ensures that the language
           // will require the Handsontable module using the CommonJS environment (.js files).
           const snippet1 = `import Handsontable from '${PACKAGE_FILENAME}';`;
           const snippet2 = `const C = Handsontable.languages.dictionaryKeys;`;
 
           return `${snippet1}${NEW_LINE_CHAR.repeat(2)}${snippet2}`;
-        }
+        },
+        flags: 'g'
       },
       {
-        pattern: /export default dictionary.+/,
-        replacement: function(matchingPhrase) {
+        search: /export default dictionary.+/,
+        replace(matchingPhrase) {
           const snippet = `Handsontable.languages.registerLanguageDictionary(dictionary);`;
 
           return `${snippet}${NEW_LINE_CHAR.repeat(2)}${matchingPhrase}`;
-        }
+        },
+        flags: 'g'
       }
     ]
-  })
+  }
 };
 
 module.exports.create = function create() {
@@ -84,29 +85,34 @@ module.exports.create = function create() {
     },
     module: {
       rules: [
-        {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
         ruleForSnippetsInjection
       ]
     },
     plugins: [
-      new WebpackOnBuildPlugin(() => {
-        const filesInOutputLanguagesDirectory = fs.readdirSync(OUTPUT_LANGUAGES_DIRECTORY);
-        const indexFileName = 'index.js';
-        const allLanguagesFileName = 'all.js';
+      new class OnBuildDonePlugin {
+        apply(compiler) {
+          // Specify the event hook to attach to
+          compiler.hooks.done.tap('OnBuildDonePlugin', () => {
+            const filesInOutputLanguagesDirectory = fs.readdirSync(OUTPUT_LANGUAGES_DIRECTORY);
+            const indexFileName = 'index.js';
+            const allLanguagesFileName = 'all.js';
 
-        // Copy files from `languages` directory to `dist/languages` directory
-        filesInOutputLanguagesDirectory.forEach((fileName) => {
-          // Copy only UMD language files (ignore ES files that with .mjs extension)
-          if (fileName !== indexFileName && fileName.endsWith('.js')) {
-            fsExtra.copySync(`${OUTPUT_LANGUAGES_DIRECTORY}/${fileName}`, `dist/languages/${fileName}`);
-          }
-        });
+            // Copy files from `languages` directory to `dist/languages` directory
+            filesInOutputLanguagesDirectory.forEach((fileName) => {
+              // Copy only UMD language files (ignore ES files that with .mjs extension)
+              if (fileName !== indexFileName && fileName.endsWith('.js')) {
+                fsExtra.copySync(`${OUTPUT_LANGUAGES_DIRECTORY}/${fileName}`, `dist/languages/${fileName}`);
+              }
+            });
 
-        // Copy from `languages/all.js` to `languages/index.js`
-        if (filesInOutputLanguagesDirectory.includes(allLanguagesFileName)) {
-          fsExtra.copySync(`${OUTPUT_LANGUAGES_DIRECTORY}/${allLanguagesFileName}`, `${OUTPUT_LANGUAGES_DIRECTORY}/${indexFileName}`);
+            // Copy from `languages/all.js` to `languages/index.js`
+            if (filesInOutputLanguagesDirectory.includes(allLanguagesFileName)) {
+              fsExtra.copySync(`${OUTPUT_LANGUAGES_DIRECTORY}/${allLanguagesFileName}`, `${OUTPUT_LANGUAGES_DIRECTORY}/${indexFileName}`);
+            }
+          });
         }
-      })
+      }
     ]
   };
 

@@ -1,10 +1,11 @@
 import React from 'react';
+import { act } from '@testing-library/react';
 import { HotTable } from '../src/hotTable';
 import { HotColumn } from '../src/hotColumn';
 import {
   createSpreadsheetData,
   mockElementDimensions,
-  mountComponent,
+  mountComponentWithRef,
   sleep,
 } from './_helpers';
 import { HOT_DESTROYED_WARNING } from "../src/helpers";
@@ -33,7 +34,7 @@ describe('Subcomponent state', () => {
     let zeroRendererInstance = null;
     let oneRendererInstance = null;
 
-    const hotInstance = mountComponent((
+    const hotInstance = mountComponentWithRef((
       <HotTable licenseKey="non-commercial-and-evaluation"
                 id="test-hot"
                 data={createSpreadsheetData(3, 2)}
@@ -65,12 +66,14 @@ describe('Subcomponent state', () => {
     expect(hotInstance.getCell(0, 0).innerHTML).toEqual('<div>initial</div>');
     expect(hotInstance.getCell(0, 1).innerHTML).toEqual('<div>initial</div>');
 
-    zeroRendererInstance.setState({
-      value: 'altered'
-    });
+    await act(async () => {
+      zeroRendererInstance.setState({
+        value: 'altered'
+      });
 
-    oneRendererInstance.setState({
-      value: 'altered as well'
+      oneRendererInstance.setState({
+        value: 'altered as well'
+      });
     });
 
     expect(hotInstance.getCell(0, 0).innerHTML).toEqual('<div>altered</div>');
@@ -99,7 +102,7 @@ describe('Subcomponent state', () => {
     let globalEditorInstance = null;
     let columnEditorInstance = null;
 
-    mountComponent((
+    mountComponentWithRef((
       <HotTable licenseKey="non-commercial-and-evaluation"
                 id="test-hot"
                 data={createSpreadsheetData(3, 2)}
@@ -125,12 +128,14 @@ describe('Subcomponent state', () => {
     expect(document.querySelector('#first-editor').innerHTML).toEqual('initial');
     expect(document.querySelector('#second-editor').innerHTML).toEqual('initial');
 
-    globalEditorInstance.setState({
-      value: 'altered'
-    });
+    await act(async () => {
+      globalEditorInstance.setState({
+        value: 'altered'
+      });
 
-    columnEditorInstance.setState({
-      value: 'altered as well'
+      columnEditorInstance.setState({
+        value: 'altered as well'
+      });
     });
 
     expect(document.querySelector('#first-editor').innerHTML).toEqual('altered');
@@ -145,15 +150,9 @@ describe('Component lifecyle', () => {
         super(props);
 
         rendererCounters.set(`${this.props.row}-${this.props.col}`, {
-          willMount: 0,
           didMount: 0,
           willUnmount: 0
         });
-      }
-
-      UNSAFE_componentWillMount(): void {
-        const counters = rendererCounters.get(`${this.props.row}-${this.props.col}`);
-        counters.willMount++;
       }
 
       componentDidMount(): void {
@@ -179,7 +178,7 @@ describe('Component lifecyle', () => {
     const rendererRefs = new Map();
     const rendererCounters = new Map();
 
-    const hotInstance = mountComponent((
+    const hotInstance = mountComponentWithRef((
       <HotTable licenseKey="non-commercial-and-evaluation"
                 id="test-hot"
                 data={createSpreadsheetData(3, 2)}
@@ -206,23 +205,24 @@ describe('Component lifecyle', () => {
           }} hot-renderer></RendererComponent2>
         </HotColumn>
       </HotTable>
-    )).hotInstance;
+    ), false).hotInstance;
 
     rendererCounters.forEach((counters) => {
-      expect(counters.willMount).toEqual(1);
       expect(counters.didMount).toEqual(1);
       expect(counters.willUnmount).toEqual(0);
     });
 
     secondGo = true;
 
-    hotInstance.render();
+    await act(async () => {
+      hotInstance.render();
+    });
+
     await sleep(300);
 
     rendererCounters.forEach((counters) => {
-      expect(counters.willMount).toEqual(1);
       expect(counters.didMount).toEqual(1);
-      expect(counters.willUnmount).toEqual(1);
+      expect(counters.willUnmount).toEqual(0);
     });
   });
 
@@ -232,15 +232,9 @@ describe('Component lifecyle', () => {
         super(props);
 
         editorCounters.set(`${this.props.row}-${this.props.col}`, {
-          willMount: 0,
           didMount: 0,
           willUnmount: 0
         });
-      }
-
-      UNSAFE_componentWillMount(): void {
-        const counters = editorCounters.get(`${this.props.row}-${this.props.col}`);
-        counters.willMount++;
       }
 
       componentDidMount(): void {
@@ -273,7 +267,7 @@ describe('Component lifecyle', () => {
       }} hot-editor key={Math.random()}></EditorComponent2>
     ];
 
-    const hotTableInstance = mountComponent((
+    const hotTableInstance = mountComponentWithRef((
       <HotTable licenseKey="non-commercial-and-evaluation"
                 id="test-hot"
                 data={createSpreadsheetData(3, 2)}
@@ -286,10 +280,9 @@ describe('Component lifecyle', () => {
                 }}>
         {childrenArray}
       </HotTable>
-    ));
+    ), false);
 
     editorCounters.forEach((counters) => {
-      expect(counters.willMount).toEqual(1);
       expect(counters.didMount).toEqual(1);
       expect(counters.willUnmount).toEqual(0);
     });
@@ -297,11 +290,14 @@ describe('Component lifecyle', () => {
     secondGo = true;
 
     childrenArray.length = 0;
-    hotTableInstance.forceUpdate();
+
+    await act(async () => {
+      hotTableInstance.forceUpdate();
+    });
+
     await sleep(100);
 
     editorCounters.forEach((counters) => {
-      expect(counters.willMount).toEqual(1);
       expect(counters.didMount).toEqual(1);
       expect(counters.willUnmount).toEqual(1);
     });
@@ -312,7 +308,7 @@ describe('Component lifecyle', () => {
     const warnFunc = console.warn;
     const warnCalls = [];
 
-    const componentInstance = mountComponent((
+    const componentInstance = mountComponentWithRef((
       <HotTable
         id="test-hot"
         data={[[2]]}

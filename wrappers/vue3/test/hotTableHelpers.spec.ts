@@ -24,11 +24,11 @@ describe('prepareSettings', () => {
       id: 'hot-id',
       readOnly: true,
       colHeaders: true,
-      afterChange: () => 'afterChangeResult',
+      beforeRemoveCellClassNames: () => ['beforeRemoveCellClassNamesResult'],
       settings: {
         rowHeaders: true,
         data: [[1, 2], [3, 4]],
-        afterUpdateSettings: () => 'afterUpdateSettingsResult'
+        beforeChange: () => true
       }
     };
 
@@ -38,9 +38,26 @@ describe('prepareSettings', () => {
     expect(preparedSettings.colHeaders).toBe(true);
     expect(preparedSettings.rowHeaders).toBe(true);
     expect(preparedSettings.data).toEqual([[1, 2], [3, 4]]);
-    expect(preparedSettings.afterUpdateSettings(preparedSettings)).toBe('afterUpdateSettingsResult');
-    expect(preparedSettings.afterChange([[1, 1, 1, 1]], 'auto')).toBe('afterChangeResult');
+    expect(preparedSettings.beforeChange([], 'auto')).toBe(true);
+    expect(preparedSettings.beforeRemoveCellClassNames()).toEqual(['beforeRemoveCellClassNamesResult']);
     expect(preparedSettings.id).toBe(void 0);
     expect(preparedSettings.settings).toBe(void 0);
+  });
+
+  it('should handle settings with circular structure', () => {
+    const circularStructure = { foo: 'bar', myself: {} };
+
+    circularStructure.myself = circularStructure;
+
+    const propsMockCircular = {
+      readOnly: true,
+      whatever: circularStructure
+    };
+
+    const preparedSettings = prepareSettings(propsMockCircular, {});
+
+    expect(preparedSettings.readOnly).toBe(true);
+    expect(preparedSettings.whatever.foo).toBe('bar');
+    expect(preparedSettings.whatever.myself.foo).toBe('bar');
   });
 });

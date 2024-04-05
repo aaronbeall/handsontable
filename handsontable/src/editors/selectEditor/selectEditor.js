@@ -26,9 +26,11 @@ export class SelectEditor extends BaseEditor {
    * Initializes editor instance, DOM Element and mount hooks.
    */
   init() {
-    this.select = this.hot.rootDocument.createElement('SELECT');
-    addClass(this.select, 'htSelectEditor');
+    this.select = this.hot.rootDocument.createElement('select');
+    this.select.setAttribute('data-hot-input', 'true');
     this.select.style.display = 'none';
+
+    addClass(this.select, 'htSelectEditor');
 
     this.hot.rootElement.appendChild(this.select);
     this.registerHooks();
@@ -109,7 +111,7 @@ export class SelectEditor extends BaseEditor {
    * @param {number|string} prop The column property (passed when datasource is an array of objects).
    * @param {HTMLTableCellElement} td The rendered cell element.
    * @param {*} value The rendered value.
-   * @param {object} cellProperties The cell meta object ({@see Core#getCellMeta}).
+   * @param {object} cellProperties The cell meta object (see {@link Core#getCellMeta}).
    */
   prepare(row, col, prop, td, value, cellProperties) {
     super.prepare(row, col, prop, td, value, cellProperties);
@@ -215,7 +217,7 @@ export class SelectEditor extends BaseEditor {
   registerShortcuts() {
     const shortcutManager = this.hot.getShortcutManager();
     const editorContext = shortcutManager.getContext('editor');
-
+    const gridContext = shortcutManager.getContext('grid');
     const contextConfig = {
       group: SHORTCUTS_GROUP,
     };
@@ -226,6 +228,13 @@ export class SelectEditor extends BaseEditor {
     }
 
     editorContext.addShortcuts([{
+      keys: [
+        ['Tab'],
+        ['Shift', 'Tab'],
+      ],
+      forwardToContext: gridContext,
+      callback: () => {},
+    }, {
       keys: [['ArrowUp']],
       callback: () => {
         const previousOptionIndex = this.select.selectedIndex - 1;

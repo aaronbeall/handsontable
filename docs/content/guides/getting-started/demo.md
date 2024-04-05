@@ -22,7 +22,9 @@ Play around with a demo of Handsontable, in your favorite framework.
 [[toc]]
 
 ::: only-for javascript
+
 ::: example-without-tabs #example
+
 ```html
 <div id="example"></div>
 ```
@@ -30,28 +32,6 @@ Play around with a demo of Handsontable, in your favorite framework.
 #example {
   height: 450px;
 }
-
-/*
-  A stylesheet customizing app (custom renderers)
-*/
-
-table.htCore td.star {
-  color: #fcb515;
-}
-
-table.htCore tr.odd td {
-  background: #fafbff;
-}
-
-table.htCore td .progressBar {
-  background: #37bc6c;
-  height: 10px;
-}
-
-table.htCore tr.selected td {
-  background: #edf3fd;
-}
-
 /*
   A stylesheet customizing Handsontable style
 */
@@ -1331,55 +1311,6 @@ export function generateExampleData() {
   return isArabicDemoEnabled() ? generateArabicData() : data;
 }
 
-// customRenderers.js
-const addClassWhenNeeded = (td, cellProperties) => {
-  const className = cellProperties.className;
-
-  if (className !== void 0) {
-    Handsontable.dom.addClass(td, className);
-  }
-};
-
-export function progressBarRenderer(
-  instance,
-  td,
-  row,
-  column,
-  prop,
-  value,
-  cellProperties
-) {
-  const div = document.createElement("div");
-
-  div.style.width = `${value * 10}px`;
-
-  addClassWhenNeeded(td, cellProperties);
-  Handsontable.dom.addClass(div, "progressBar");
-  Handsontable.dom.empty(td);
-
-  td.appendChild(div);
-}
-
-export function starRenderer(
-  instance,
-  td,
-  row,
-  column,
-  prop,
-  value,
-  cellProperties
-) {
-  Handsontable.renderers.TextRenderer.apply(this, [
-    instance,
-    td,
-    row,
-    column,
-    prop,
-    "★".repeat(value),
-    cellProperties
-  ]);
-}
-
 // hooksCallbacks.js
 const headerAlignments = new Map([
   ["9", "htCenter"],
@@ -1414,20 +1345,6 @@ export function addClassesToRows(TD, row, column, prop, value, cellProperties) {
   }
 }
 
-export function drawCheckboxInRowHeaders(row, TH) {
-  const input = document.createElement("input");
-
-  input.type = "checkbox";
-
-  if (row >= 0 && this.getDataAtRowProp(row, "0")) {
-    input.checked = true;
-  }
-
-  Handsontable.dom.empty(TH);
-
-  TH.appendChild(input);
-}
-
 export function alignHeaders(column, TH) {
   if (column < 0) {
     return;
@@ -1445,16 +1362,6 @@ export function alignHeaders(column, TH) {
   }
 }
 
-export function changeCheckboxCell(event, coords) {
-  const target = event.target;
-
-  if (coords.col === -1 && target && target.nodeName === "INPUT") {
-    event.preventDefault(); // Handsontable will render checked/unchecked checkbox by it own.
-
-    this.setDataAtRowProp(coords.row, "0", !target.checked);
-  }
-}
-
 const example = document.getElementById("example");
 
 new Handsontable(example, {
@@ -1462,15 +1369,13 @@ new Handsontable(example, {
   layoutDirection: isArabicDemoEnabled() ? "rtl" : "ltr",
   language: isArabicDemoEnabled() ? arAR.languageCode : "en-US",
   height: 450,
-  colWidths: [140, 192, 100, 90, 90, 110, 97, 100, 126],
+  colWidths: [140, 192, 100, 90, 90, 100, 126],
   colHeaders: [
     "Company name",
     "Name",
     "Sell date",
     "In stock",
     "Qty",
-    "Progress",
-    "Rating",
     "Order ID",
     "Country"
   ],
@@ -1492,18 +1397,6 @@ new Handsontable(example, {
       data: 7,
       type: "numeric"
     },
-    {
-      data: 8,
-      renderer: progressBarRenderer,
-      readOnly: true,
-      className: "htMiddle"
-    },
-    {
-      data: 9,
-      renderer: starRenderer,
-      readOnly: true,
-      className: "star htCenter"
-    },
     { data: 5, type: "text" },
     { data: 2, type: "text" }
   ],
@@ -1517,46 +1410,30 @@ new Handsontable(example, {
   rowHeaders: true,
   manualRowMove: true,
   afterGetColHeader: alignHeaders,
-  afterOnCellMouseDown: changeCheckboxCell,
   beforeRenderer: addClassesToRows,
+  autoWrapRow: true,
+  autoWrapCol: true,
   licenseKey: "non-commercial-and-evaluation"
 });
 
 console.log(`Handsontable: v${Handsontable.version} (${Handsontable.buildDate})`);
 
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example-without-tabs #example2 :react
+
 ```html
 <div id="example2"></div>
 ```
 ```css
 #example2 {
   height: 450px;
-}
-
-/*
-  A stylesheet customizing app (custom renderers)
-*/
-
-table.htCore .star {
-  color: #fcb515;
-}
-
-table.htCore tr.odd td {
-  background: #fafbff;
-}
-
-table.htCore td .progressBar {
-  background: #37bc6c;
-  height: 10px;
-}
-
-table.htCore tr.selected td {
-  background: #edf3fd;
 }
 
 /*
@@ -1579,31 +1456,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Handsontable from 'handsontable';
 import { HotTable, HotColumn } from "@handsontable/react";
-
-// utils.ts
-export const addClassWhenNeeded = (props) => {
-  const className = props.cellProperties.className;
-
-  if (className !== void 0) {
-    Handsontable.dom.addClass(props.TD, className);
-  }
-};
-
-// ProgressBar.tsx
-export function ProgressBarRenderer(props) {
-  addClassWhenNeeded(props);
-
-  return (
-    <div className={`progressBar`} style={{ width: `${props.value * 10}px` }} />
-  );
-}
-
-// Stars.tsx
-export function StarsRenderer(props) {
-  addClassWhenNeeded(props);
-
-  return <div className="star htCenter">{"★".repeat(props.value)}</div>;
-}
 
 // constants.ts
 export const data = [
@@ -2853,23 +2705,6 @@ export const addClassesToRows = (
   }
 };
 
-export const drawCheckboxInRowHeaders = function drawCheckboxInRowHeaders(
-  row,
-  TH
-) {
-  const input = document.createElement("input");
-
-  input.type = "checkbox";
-
-  if (row >= 0 && this.getDataAtRowProp(row, "0")) {
-    input.checked = true;
-  }
-
-  Handsontable.dom.empty(TH);
-
-  TH.appendChild(input);
-};
-
 export function alignHeaders(column, TH) {
   if (column < 0) {
     return;
@@ -2887,20 +2722,6 @@ export function alignHeaders(column, TH) {
   }
 }
 
-export const changeCheckboxCell = function changeCheckboxCell(
-  event,
-  coords
-) {
-  const target = event.target;
-
-  if (coords.col === -1 && event.target && target.nodeName === "INPUT") {
-    event.preventDefault(); // Handsontable will render checked/unchecked checkbox by it own.
-
-    this.setDataAtRowProp(coords.row, "0", !target.checked);
-  }
-};
-
-
 import "handsontable/dist/handsontable.full.min.css";
 
 const App = () => {
@@ -2908,15 +2729,13 @@ const App = () => {
     <HotTable
       data={data}
       height={450}
-      colWidths={[140, 192, 100, 90, 90, 110, 97, 100, 126]}
+      colWidths={[140, 192, 100, 90, 90, 100, 126]}
       colHeaders={[
         "Company name",
         "Name",
         "Sell date",
         "In stock",
         "Qty",
-        "Progress",
-        "Rating",
         "Order ID",
         "Country"
       ]}
@@ -2930,9 +2749,9 @@ const App = () => {
       rowHeaders={true}
       afterGetColHeader={alignHeaders}
       beforeRenderer={addClassesToRows}
-      afterGetRowHeader={drawCheckboxInRowHeaders}
-      afterOnCellMouseDown={changeCheckboxCell}
       manualRowMove={true}
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
     >
       <HotColumn data={1} />
@@ -2940,14 +2759,6 @@ const App = () => {
       <HotColumn data={4} type="date" allowInvalid={false} />
       <HotColumn data={6} type="checkbox" className="htCenter" />
       <HotColumn data={7} type="numeric" />
-      <HotColumn data={8} readOnly={true} className="htMiddle">
-        {/* @ts-ignore Element inherits some props. It's hard to type it. */}
-        <ProgressBarRenderer hot-renderer />
-      </HotColumn>
-      <HotColumn data={9} readOnly={true} className="htCenter">
-        {/* @ts-ignore Element inherits some props. It's hard to type it. */}
-        <StarsRenderer hot-renderer />
-      </HotColumn>
       <HotColumn data={5} />
       <HotColumn data={2} />
     </HotTable>
@@ -2959,16 +2770,18 @@ ReactDOM.render(<App />, rootElement);
 
 console.log(`Handsontable: v${Handsontable.version} (${Handsontable.buildDate}) Wrapper: v${HotTable.version} React: v${React.version}`);
 ```
+
 :::
+
 :::
 
 ## Find the code on GitHub
 
-- [JavaScript demo app](https://github.com/handsontable/handsontable/tree/develop/examples/12.3.1/docs/js/demo/)
-- [TypeScript demo app](https://github.com/handsontable/handsontable/tree/develop/examples/12.3.1/docs/ts/demo/)
-- [Angular demo app](https://github.com/handsontable/handsontable/tree/develop/examples/12.3.1/docs/angular/demo/)
-- [React demo app](https://github.com/handsontable/handsontable/tree/develop/examples/12.3.1/docs/react/demo/)
-- [Vue demo app](https://github.com/handsontable/handsontable/tree/develop/examples/12.3.1/docs/vue/demo/)
+- [JavaScript demo app](https://github.com/handsontable/handsontable/tree/prod-docs/14.2/examples/next/docs/js/demo/)
+- [TypeScript demo app](https://github.com/handsontable/handsontable/tree/prod-docs/14.2/examples/next/docs/ts/demo/)
+- [Angular demo app](https://github.com/handsontable/handsontable/tree/prod-docs/14.2/examples/next/docs/angular/demo/)
+- [React demo app](https://github.com/handsontable/handsontable/tree/prod-docs/14.2/examples/next/docs/react/demo/)
+- [Vue demo app](https://github.com/handsontable/handsontable/tree/prod-docs/14.2/examples/next/docs/vue/demo/)
 
 ## Try out the demo's features
 
@@ -2980,7 +2793,7 @@ Explore the demo and discover Handsontable's most popular features:
 - [Column menu](@/guides/columns/column-menu.md)
 - [Column filter](@/guides/columns/column-filter.md)
 - [Column hiding](@/guides/columns/column-hiding.md)
-- [Row sorting](@/guides/rows/row-sorting.md)
+- [Rows sorting](@/guides/rows/rows-sorting.md)
 - And more!
 
 ## Edit the demo's source code

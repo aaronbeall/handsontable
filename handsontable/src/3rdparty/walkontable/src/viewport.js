@@ -9,6 +9,9 @@ import { objectEach } from '../../../helpers/object';
 import {
   RENDER_TYPE,
   FULLY_VISIBLE_TYPE,
+  PARTIALLY_VISIBLE_TYPE,
+  RenderAllColumnsCalculator,
+  RenderAllRowsCalculator,
   ViewportColumnsCalculator,
   ViewportRowsCalculator,
 } from './calculator';
@@ -294,29 +297,26 @@ class Viewport {
    */
   createRowsCalculator(calculationType = RENDER_TYPE) {
     const { wtSettings, wtTable } = this;
-    let height;
+
+    if (wtSettings.getSetting('renderAllRows') && calculationType === RENDER_TYPE) {
+      return new RenderAllRowsCalculator({
+        totalRows: wtSettings.getSetting('totalRows'),
+      });
+    }
+
+    let height = this.getViewportHeight();
     let scrollbarHeight;
     let fixedRowsHeight;
 
     this.rowHeaderWidth = NaN;
 
-    if (wtSettings.getSetting('renderAllRows') && calculationType === RENDER_TYPE) {
-      height = Infinity;
-    } else {
-      height = this.getViewportHeight();
-    }
-
     let pos = this.dataAccessObject.topScrollPosition - this.dataAccessObject.topParentOffset;
-
-    if (pos < 0) {
-      pos = 0;
-    }
 
     const fixedRowsTop = wtSettings.getSetting('fixedRowsTop');
     const fixedRowsBottom = wtSettings.getSetting('fixedRowsBottom');
     const totalRows = wtSettings.getSetting('totalRows');
 
-    if (fixedRowsTop) {
+    if (fixedRowsTop && pos >= 0) {
       fixedRowsHeight = this.dataAccessObject.topOverlay.sumCellSizes(0, fixedRowsTop);
       pos += fixedRowsHeight;
       height -= fixedRowsHeight;
@@ -335,13 +335,13 @@ class Viewport {
     }
 
     return new ViewportRowsCalculator({
-      viewportSize: height,
+      viewportHeight: height,
       scrollOffset: pos,
-      totalItems: wtSettings.getSetting('totalRows'),
-      itemSizeFn: sourceRow => wtTable.getRowHeight(sourceRow),
+      totalRows: wtSettings.getSetting('totalRows'),
+      rowHeightFn: sourceRow => wtTable.getRowHeight(sourceRow),
       overrideFn: wtSettings.getSettingPure('viewportRowCalculatorOverride'),
       calculationType,
-      scrollbarHeight,
+      horizontalScrollbarHeight: scrollbarHeight,
     });
   }
 
@@ -356,18 +356,21 @@ class Viewport {
    */
   createColumnsCalculator(calculationType = RENDER_TYPE) {
     const { wtSettings, wtTable } = this;
+
+    if (wtSettings.getSetting('renderAllColumns') && calculationType === RENDER_TYPE) {
+      return new RenderAllColumnsCalculator({
+        totalColumns: wtSettings.getSetting('totalColumns'),
+      });
+    }
+
     let width = this.getViewportWidth();
     let pos = Math.abs(this.dataAccessObject.inlineStartScrollPosition) - this.dataAccessObject.inlineStartParentOffset;
 
     this.columnHeaderHeight = NaN;
 
-    if (pos < 0) {
-      pos = 0;
-    }
-
     const fixedColumnsStart = wtSettings.getSetting('fixedColumnsStart');
 
-    if (fixedColumnsStart) {
+    if (fixedColumnsStart && pos >= 0) {
       const fixedColumnsWidth = this.dataAccessObject.inlineStartOverlay.sumCellSizes(0, fixedColumnsStart);
 
       pos += fixedColumnsWidth;
@@ -378,16 +381,13 @@ class Viewport {
     }
 
     return new ViewportColumnsCalculator({
-      viewportSize: width,
-      scrollOffset: Math.abs(pos),
-      totalItems: wtSettings.getSetting('totalColumns'),
-      itemSizeFn: sourceCol => wtTable.getColumnWidth(sourceCol),
+      viewportWidth: width,
+      scrollOffset: pos,
+      totalColumns: wtSettings.getSetting('totalColumns'),
+      columnWidthFn: sourceCol => wtTable.getColumnWidth(sourceCol),
       overrideFn: wtSettings.getSettingPure('viewportColumnCalculatorOverride'),
       calculationType,
-      stretchMode: wtSettings.getSetting('stretchH'),
-      stretchingItemWidthFn: (stretchedWidth, column) => {
-        return wtSettings.getSetting('onBeforeStretchingColumnWidth', stretchedWidth, column);
-      },
+      inlineStartOffset: this.dataAccessObject.inlineStartParentOffset
     });
   }
 
@@ -400,27 +400,30 @@ class Viewport {
    * @returns {boolean} The fastDraw value, possibly modified.
    */
   createRenderCalculators(fastDraw = false) {
-    let runFastDraw = fastDraw;
+    const { wtSettings } = this;
 
-    if (runFastDraw) {
+    if (fastDraw && !wtSettings.getSetting('renderAllRows')) {
       const proposedRowsVisibleCalculator = this.createRowsCalculator(FULLY_VISIBLE_TYPE);
-      const proposedColumnsVisibleCalculator = this.createColumnsCalculator(FULLY_VISIBLE_TYPE);
 
-      if (!(this.areAllProposedVisibleRowsAlreadyRendered(proposedRowsVisibleCalculator) &&
-          this.areAllProposedVisibleColumnsAlreadyRendered(proposedColumnsVisibleCalculator))) {
-        runFastDraw = false;
-      }
+      fastDraw = this.areAllProposedVisibleRowsAlreadyRendered(proposedRowsVisibleCalculator);
     }
 
-    if (!runFastDraw) {
+    if (fastDraw && !wtSettings.getSetting('renderAllColumns')) {
+      const proposedColumnsVisibleCalculator = this.createColumnsCalculator(FULLY_VISIBLE_TYPE);
+
+      fastDraw = this.areAllProposedVisibleColumnsAlreadyRendered(proposedColumnsVisibleCalculator);
+    }
+
+    if (!fastDraw) {
       this.rowsRenderCalculator = this.createRowsCalculator(RENDER_TYPE);
       this.columnsRenderCalculator = this.createColumnsCalculator(RENDER_TYPE);
     }
+
     // delete temporarily to make sure that renderers always use rowsRenderCalculator, not rowsVisibleCalculator
     this.rowsVisibleCalculator = null;
     this.columnsVisibleCalculator = null;
 
-    return runFastDraw;
+    return fastDraw;
   }
 
   /**
@@ -430,6 +433,15 @@ class Viewport {
   createVisibleCalculators() {
     this.rowsVisibleCalculator = this.createRowsCalculator(FULLY_VISIBLE_TYPE);
     this.columnsVisibleCalculator = this.createColumnsCalculator(FULLY_VISIBLE_TYPE);
+  }
+
+  /**
+   * Creates rowsPartiallyVisibleCalculator and columnsPartiallyVisibleCalculator (after draw, to determine what are
+   * the actually partially visible rows and columns).
+   */
+  createPartiallyVisibleCalculators() {
+    this.rowsPartiallyVisibleCalculator = this.createRowsCalculator(PARTIALLY_VISIBLE_TYPE);
+    this.columnsPartiallyVisibleCalculator = this.createColumnsCalculator(PARTIALLY_VISIBLE_TYPE);
   }
 
   /**
@@ -445,11 +457,11 @@ class Viewport {
       return false;
     }
 
-    const { startRow, endRow } = proposedRowsVisibleCalculator;
+    const { startRow, endRow, isVisibleInTrimmingContainer } = proposedRowsVisibleCalculator;
 
     // if there are no fully visible rows at all, return false
     if (startRow === null && endRow === null) {
-      return false;
+      return !isVisibleInTrimmingContainer;
     }
 
     const { startRow: renderedStartRow, endRow: renderedEndRow } = this.rowsRenderCalculator;
@@ -478,11 +490,11 @@ class Viewport {
       return false;
     }
 
-    const { startColumn, endColumn } = proposedColumnsVisibleCalculator;
+    const { startColumn, endColumn, isVisibleInTrimmingContainer } = proposedColumnsVisibleCalculator;
 
     // if there are no fully visible columns at all, return false
     if (startColumn === null && endColumn === null) {
-      return false;
+      return !isVisibleInTrimmingContainer;
     }
 
     const { startColumn: renderedStartColumn, endColumn: renderedEndColumn } = this.columnsRenderCalculator;
@@ -492,6 +504,7 @@ class Viewport {
 
     } else if (endColumn > renderedEndColumn ||
               (endColumn === renderedEndColumn && endColumn < this.wtSettings.getSetting('totalColumns') - 1)) {
+
       return false;
     }
 
@@ -503,7 +516,7 @@ class Viewport {
    */
   resetHasOversizedColumnHeadersMarked() {
     objectEach(this.hasOversizedColumnHeadersMarked, (value, key, object) => {
-      object[key] = void 0;
+      object[key] = undefined;
     });
   }
 }

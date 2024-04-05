@@ -8,8 +8,11 @@ canonicalUrl: /column-summary
 tags:
   - column summaries
   - calculations
-  - formulas
   - functions
+  - suppressDataTypeErrors
+  - destinationRow
+  - destinationColumn
+  - reversedRowCoords
 react:
   id: r3x4l0gp
   metaTitle: Column summary - React Data Grid | Handsontable
@@ -38,7 +41,9 @@ To customize your column summaries, you can:
 This example calculates and displays five different column summaries:
 
 ::: only-for javascript
+
 ::: example #example1
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -52,7 +57,7 @@ const hot = new Handsontable(container, {
     [11, 12, 13, 14, 15],
     [null]
   ],
-  colHeaders: true,
+  colHeaders: ['sum', 'min', 'max', 'count', 'average'],
   rowHeaders: true,
   // enable and configure the `ColumnSummary` plugin
   columnSummary: [
@@ -88,14 +93,20 @@ const hot = new Handsontable(container, {
       destinationRow: 3,
       destinationColumn: 4
     }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example1 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -107,6 +118,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         [1, 2, 3, 4, 5],
@@ -114,7 +127,7 @@ export const ExampleComponent = () => {
         [11, 12, 13, 14, 15],
         [null]
       ]}
-      colHeaders={true}
+      colHeaders={['sum', 'min', 'max', 'count', 'average']}
       rowHeaders={true}
       columnSummary={[
         {
@@ -158,9 +171,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example1'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ### Built-in summary functions
 
@@ -173,7 +187,7 @@ To decide how a column summary is calculated, you can use one of the following s
 | `max`     | Returns the highest value in a column.                                                                 |
 | `count`   | Returns the number of all non-empty cells in a column.                                                 |
 | `average` | Returns the sum of all values in a column,<br>divided by the number of non-empty cells in that column. |
-| `custom`  | Lets you implement a [custom summary function](#implement-a-custom-summary-function).               |
+| `custom`  | Lets you implement a [custom summary function](#implement-a-custom-summary-function).                  |
 
 ### Column summary options
 
@@ -187,11 +201,10 @@ To set up a column summary, follow the steps below.
 
 ### Step 1: Enable the [`ColumnSummary`](@/api/columnSummary.md) plugin
 
-To enable the [`ColumnSummary`](@/api/columnSummary.md) plugin, set the [`columnSummary`](@/api/options.md#columnsummary) configuration option to an array of objects.
-
-Each object represents a single column summary.
+To enable the [`ColumnSummary`](@/api/columnSummary.md) plugin, set the [`columnSummary`](@/api/options.md#columnsummary) configuration option to an array of objects. Each object represents a single column summary.
 
 ::: only-for javascript
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -209,12 +222,14 @@ const hot = new Handsontable(document.querySelector('#example'), {
   columnSummary: [
     {},
     {}
-  ]
+  ],
 });
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -226,6 +241,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         [1, 2, 3, 4, 5],
@@ -242,11 +259,10 @@ export const ExampleComponent = () => {
   );
 };
 ```
+
 :::
 
-::: tip
-You can also set the [`columnSummary`](@/api/options.md#columnsummary) option to a function.
-:::
+You can also set the [`columnSummary`](@/api/options.md#columnsummary) option [to a function](#set-up-column-summaries-using-a-function).
 
 ### Step 2: Select cells that you want to summarize
 
@@ -255,6 +271,7 @@ By default, a column summary takes all cells of the column in which it displays 
 To summarize any other column, use the [`sourceColumn`](@/api/columnSummary.md#options) option:
 
 ::: only-for javascript
+
 ```js
 columnSummary: [
   {
@@ -269,9 +286,11 @@ columnSummary: [
   }
 ]
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 columnSummary={[
   {
@@ -286,11 +305,13 @@ columnSummary={[
   }
 ]}
 ```
+
 :::
 
 You can also summarize individual ranges of rows (rather than a whole column). To do this, set the [`ranges`](@/api/columnSummary.md#options) option to an array of arrays, where each array represents a single row range.
 
 ::: only-for javascript
+
 ```js
 columnSummary: [
   {
@@ -309,9 +330,11 @@ columnSummary: [
   }
 ]
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 columnSummary={[
   {
@@ -330,6 +353,7 @@ columnSummary={[
   }
 ]}
 ```
+
 :::
 
 ### Step 3: Calculate your summary
@@ -341,6 +365,7 @@ You can:
 - Or implement a [custom summary function](#implement-a-custom-summary-function)
 
 ::: only-for javascript
+
 ```js
 columnSummary: [
   {
@@ -355,9 +380,11 @@ columnSummary: [
   }
 ]
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 columnSummary={[
   {
@@ -372,6 +399,7 @@ columnSummary={[
   }
 ]}
 ```
+
 :::
 
 ### Step 4: Provide the destination cell's coordinates
@@ -381,6 +409,7 @@ To display your column summary result in a cell, provide the destination cell's 
 Set the [`destinationRow`](@/api/columnSummary.md#options) and [`destinationColumn`](@/api/columnSummary.md#options) options to the physical coordinates of your required cell.
 
 ::: only-for javascript
+
 ```js
 columnSummary: [
   {
@@ -399,9 +428,11 @@ columnSummary: [
   }
 ]
 ```
+
 :::
 
 ::: only-for react
+
 ```jsx
 columnSummary={[
   {
@@ -420,12 +451,15 @@ columnSummary={[
   }
 ]}
 ```
+
 :::
 
 ::: tip
+
 Don't change the [`className`](@/api/options.md#classname) metadata of the summary row.
 
 If you need to style the summary row, use the class name assigned automatically by the [`ColumnSummary`](@/api/columnSummary.md) plugin: `columnSummaryResult`.
+
 :::
 
 ### Step 5: Make room for the destination cell
@@ -435,12 +469,17 @@ The [`ColumnSummary`](@/api/columnSummary.md) plugin doesn't automatically add n
 So, if you always want to display your column summary result below your existing rows, you need to:
 1. Add an empty row to the bottom of your grid (to avoid overwriting your existing rows).
 2. Reverse row coordinates for your column summary (to always display your summary result at the bottom).
+
 ::: tip
+
 To reverse row coordinates for your column summary, set the [`reversedRowCoords`](@/api/columnSummary.md#options) option to `true`, and adjust the [`destinationRow`](@/api/columnSummary.md#options) coordinate.
+
 :::
 
 ::: only-for javascript
+
 ::: example #example2
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -478,14 +517,20 @@ const hot = new Handsontable(container, {
       destinationRow: 0,
       destinationColumn: 1
     }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example2 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -497,6 +542,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         [1, 2, 3, 4, 5],
@@ -537,7 +584,9 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example2'));
 /* end:skip-in-preview */
 ```
+
 :::
+
 :::
 
 ## Set up column summaries, using a function
@@ -552,7 +601,9 @@ The example below sets up five different column summaries. To do this, it:
     - To display the column summaries in the empty row added by `generateData`, sets the [`reversedRowCoords`](@/api/columnSummary.md#options) option to `true`, and the [`destinationRow`](@/api/columnSummary.md#options) option to `0`
 
 ::: only-for javascript
+
 ::: example #example7
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -601,14 +652,20 @@ const hot = new Handsontable(container, {
     }
 
     return configArray;
-  }
+  },
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example7 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -636,6 +693,8 @@ export const ExampleComponent = () => {
 
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={generateData(5, 5, true)}
       height="auto"
@@ -669,14 +728,17 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example7'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 Using a function to provide a column summary configuration lets you set up all sorts of more complex column summaries. For example, you can sum subtotals for nested groups:
 
 ::: only-for javascript
+
 ::: example #example8
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -745,14 +807,20 @@ const hot = new Handsontable(container, {
     }
 
     return endpoints;
-  }
+  },
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example8 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -764,6 +832,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[{
         value: null,
@@ -835,9 +905,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example8'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Implement a custom summary function
 
@@ -849,6 +920,7 @@ To implement a custom summary function:
 2. In your [column summary object](#step-1-enable-the-columnsummary-plugin), set the [`type`](@/api/options.md#type) option to `'custom'`:
 
 ::: only-for javascript
+
 ```js
 columnSummary: [{
   sourceColumn: 1,
@@ -859,9 +931,11 @@ columnSummary: [{
   reversedRowCoords: true
 }]
 ```
+
 :::
 
 ::: only-for react
+
 ```js
 columnSummary={[{
     sourceColumn: 1,
@@ -872,11 +946,13 @@ columnSummary={[{
     reversedRowCoords: true
 }]}
 ```
+
 :::
 
 3. In your column summary object, add your custom summary function:
 
 ::: only-for javascript
+
 ```js
 columnSummary: [{
     type: 'custom',
@@ -889,9 +965,11 @@ columnSummary: [{
     }
 }]
 ```
+
 :::
 
 ::: only-for react
+
 ```js
 columnSummary={[{
     type: 'custom',
@@ -904,12 +982,15 @@ columnSummary={[{
     }
 }]}
 ```
+
 :::
 
 This example implements a function that counts the number of even values in a column:
 
 ::: only-for javascript
+
 ::: example #example9
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -980,14 +1061,20 @@ const hot = new Handsontable(container, {
       },
       forceNumeric: true
     }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example9 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -1015,6 +1102,8 @@ export const ExampleComponent = () => {
 
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={generateData(5, 7)}
       height="auto"
@@ -1070,18 +1159,22 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example9'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Round a column summary result
 
 You can round a column summary result to a specific number of digits after the decimal point.
 
-To enable this feature, set the [`roundFloat`](@/api/columnSummary.md) option to your preferred number of digits. For example:
+To enable this feature, set the [`roundFloat`](@/api/columnSummary.md) option to your preferred number of digits between 0 and 100.
+See the following example:
 
 ::: only-for javascript
+
 ::: example #example12
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -1112,14 +1205,20 @@ const hot = new Handsontable(container, {
       // round this column summary result to two digits after the decimal point
       roundFloat: 2
     }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example12 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -1131,6 +1230,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         [0.5, 0.5],
@@ -1164,11 +1265,25 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example12'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
-## Deal with non-numeric values
+The [`roundFloat`](@/api/columnSummary.md) option accepts the following values:
+
+| Value             | Behavior                                                |
+| ----------------- | ------------------------------------------------------- |
+| `false` (default) | Don't round the column summary result.                  |
+| `true`            | Round the result to 0 digits after the decimal point.   |
+| Integer 0-100 (n) | Round the result to n digits after the decimal point.   |
+| Integer < 0       | Round the result to 0 digits after the decimal point.   |
+| Integer > 100     | Round the result to 100 digits after the decimal point. |
+
+If you enable [`roundFloat`](@/api/columnSummary.md), the data type returned by Handsontable's data-retrieving methods 
+(like [`getDataAtCell()`](@/api/core.md#getdataatcell)) changes from `number` to `string`.
+
+## Handle non-numeric values
 
 To summarize a column that contains non-numeric data, you can:
 
@@ -1180,16 +1295,20 @@ To summarize a column that contains non-numeric data, you can:
 
 You can force your column summary to treat non-numeric values as numeric values.
 
-:::tip
+::: tip
+
 The [`forceNumeric`](@/api/columnSummary.md) option uses JavaScript's `parseFloat()` function.
 
 This means that e.g., `3c` is treated as `3`, but `c3` is still treated as `c3`.
+
 :::
 
 To enable this feature, set the [`forceNumeric`](@/api/columnSummary.md) option to `true` (by default, [`forceNumeric`](@/api/columnSummary.md) is set to `false`). For example:
 
 ::: only-for javascript
+
 ::: example #example10
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -1221,14 +1340,20 @@ const hot = new Handsontable(container, {
       // force this column summary to treat non-numeric values as numeric values
       forceNumeric: true
     }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example10 :react
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -1240,6 +1365,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         [0, 1, 2],
@@ -1275,9 +1402,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example10'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ### Throw data type errors
 
@@ -1286,7 +1414,9 @@ You can throw a data type error whenever a non-numeric value is passed to your c
 To throw data type errors, set the [`suppressDataTypeErrors`](@/api/columnSummary.md) option to `false` (by default, [`suppressDataTypeErrors`](@/api/columnSummary.md) is set to `true`). For example:
 
 ::: only-for javascript
+
 ::: example #example11 --tab code
+
 ```js
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -1318,14 +1448,20 @@ const hot = new Handsontable(container, {
       // enable throwing data type errors for this column summary
       suppressDataTypeErrors: false
     }
-  ]
+  ],
+  autoWrapRow: true,
+  autoWrapCol: true,
 });
 ```
+
 :::
+
 :::
 
 ::: only-for react
+
 ::: example #example11 :react --tab code
+
 ```jsx
 import { HotTable } from '@handsontable/react';
 import { registerAllModules } from 'handsontable/registry';
@@ -1337,6 +1473,8 @@ registerAllModules();
 export const ExampleComponent = () => {
   return (
     <HotTable
+      autoWrapRow={true}
+      autoWrapCol={true}
       licenseKey="non-commercial-and-evaluation"
       data={[
         [0, 1, 2],
@@ -1372,9 +1510,10 @@ export const ExampleComponent = () => {
 ReactDOM.render(<ExampleComponent />, document.getElementById('example11'));
 /* end:skip-in-preview */
 ```
-:::
+
 :::
 
+:::
 
 ## Related API reference
 

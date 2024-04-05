@@ -24,6 +24,7 @@ Each of them will be applied to the root Handsontable element, allowing further 
 ## Example
 
 ::: example #example1 :vue3 --html 1 --js 2
+
 ```html
 <div id="example1">
   <hot-table :id="id" :class="className" :style="style" :settings="hotSettings"></hot-table>
@@ -47,6 +48,8 @@ const ExampleComponent = defineComponent({
         startCols: 5,
         colHeaders: true,
         stretchH: 'all',
+        autoWrapRow: true,
+        autoWrapCol: true,
         licenseKey: 'non-commercial-and-evaluation'
       },
       id: 'my-custom-id',
@@ -69,4 +72,5 @@ const app = createApp(ExampleComponent);
 app.mount('#example1');
 /* end:skip-in-preview */
 ```
+
 :::

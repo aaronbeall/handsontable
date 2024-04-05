@@ -314,8 +314,8 @@ describe('WalkontableScroll', () => {
 
       expect(firstRow.find('td:first').text()).toBe('A45');
       expect(firstRow.find('td:last').text()).toBe('D45');
-      expect(lastRow.find('td:first').text()).toBe('A51');
-      expect(lastRow.find('td:last').text()).toBe('D51');
+      expect(lastRow.find('td:first').text()).toBe('A52');
+      expect(lastRow.find('td:last').text()).toBe('D52');
     });
 
     it('should scroll to the cell so that it sticks to the bottom edge of the viewport (forced by method flag)', () => {
@@ -1516,6 +1516,62 @@ describe('WalkontableScroll', () => {
         expect(wt.wtTable.getLastVisibleRow()).toBe(-1);
         expect(wt.wtTable.getFirstRenderedRow()).toBe(0);
         expect(wt.wtTable.getLastRenderedRow()).toBe(0);
+      });
+    });
+  });
+
+  describe('API', () => {
+    describe('getLastVisibleColumn', () => {
+      it('should return the same results when calling the `getLastVisibleColumn` method for RTL and LTR modes, when' +
+        ' there\'s a gap at the inline-end-side of the table', async() => {
+        let lastVisibleColumn = null;
+
+        $('html').attr('dir', 'rtl');
+
+        spec().$wrapper.css({
+          overflow: '',
+          paddingInlineEnd: '10000px'
+        });
+        spec().$wrapper.width('auto').height('auto');
+
+        createDataArray(100, 100);
+
+        const wt1 = walkontable({
+          rtlMode: true,
+          data: getData,
+          totalRows: getTotalRows,
+          totalColumns: getTotalColumns
+        });
+
+        wt1.draw();
+
+        await sleep(300);
+
+        lastVisibleColumn = wt1.wtScroll.getLastVisibleColumn();
+
+        // Reset the DOM setup
+        $('html').attr('dir', 'ltr');
+
+        spec().$wrapper.remove();
+        spec().wotInstance.destroy();
+        spec().$wrapper = $('<div></div>').addClass('handsontable').css({ paddingInlineEnd: '10000px' });
+        spec().$container = $('<div></div>');
+        spec().$table = $('<table></table>').addClass('htCore'); // create a table that is not attached to document
+        spec().$wrapper.append(spec().$container);
+        spec().$container.append(spec().$table);
+        spec().$wrapper.appendTo('body');
+
+        const wt2 = walkontable({
+          data: getData,
+          totalRows: getTotalRows,
+          totalColumns: getTotalColumns
+        });
+
+        wt2.draw();
+
+        await sleep(300);
+
+        expect(wt2.wtScroll.getLastVisibleColumn()).toEqual(lastVisibleColumn);
       });
     });
   });

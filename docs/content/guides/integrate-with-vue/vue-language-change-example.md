@@ -18,11 +18,14 @@ Change the default language of the context menu from English to any of the built
 
 The following example implements the `@handsontable/vue` component with the option to change the Context Menu language configured. Select a language from the selector above the table and open the Context Menu to see the result.
 
-:::tip
+::: tip
+
 Note that the `language` property is bound to the component separately using `language={this.language}"`, but it could be included in the `settings` property just as well.
+
 :::
 
 ::: example #example1 :vue-languages --html 1 --js 2
+
 ```html
 <div id="example1" class="controls select-language">
   <label for="languages">Select language of the context menu:</label>
@@ -36,10 +39,13 @@ import { HotTable } from '@handsontable/vue';
 import {
   registerLanguageDictionary,
   getLanguagesDictionaries,
+  arAR,
+  csCZ,
   deCH,
   deDE,
   esMX,
   frFR,
+  hrHR,
   itIT,
   jaJP,
   koKR,
@@ -49,16 +55,20 @@ import {
   plPL,
   ptBR,
   ruRU,
+  srSP,
   zhCN,
   zhTW
 } from 'handsontable/i18n';
 import { registerAllModules } from 'handsontable/registry';
 import 'handsontable/dist/handsontable.full.css';
 
+registerLanguageDictionary(arAR);
+registerLanguageDictionary(csCZ);
 registerLanguageDictionary(deCH);
 registerLanguageDictionary(deDE);
 registerLanguageDictionary(esMX);
 registerLanguageDictionary(frFR);
+registerLanguageDictionary(hrHR);
 registerLanguageDictionary(itIT);
 registerLanguageDictionary(jaJP);
 registerLanguageDictionary(koKR);
@@ -68,6 +78,7 @@ registerLanguageDictionary(nlNL);
 registerLanguageDictionary(plPL);
 registerLanguageDictionary(ptBR);
 registerLanguageDictionary(ruRU);
+registerLanguageDictionary(srSP);
 registerLanguageDictionary(zhCN);
 registerLanguageDictionary(zhTW);
 
@@ -89,6 +100,8 @@ const ExampleComponent = {
         rowHeaders: true,
         contextMenu: true,
         height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
         licenseKey: 'non-commercial-and-evaluation'
       },
       language: 'en-US'
@@ -125,6 +138,7 @@ new Vue({
 });
 /* end:skip-in-preview */
 ```
+
 :::
 
 ## Related articles
